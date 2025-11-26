@@ -1,6 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 
+/**
+ * @file Renders the main "Hero" section of the portfolio.
+ * @module Hero
+ */
+
+/**
+ * Renders a background canvas animation with shimmering particles.
+ * This component is used within the Hero section to create a dynamic, "sparkling" background effect.
+ *
+ * @returns {React.ReactElement} A canvas element for the particle animation.
+ */
 const SparklesCore = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -68,6 +79,15 @@ const SparklesCore = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-50" />;
 };
 
+/**
+ * The main "Hero" component for the portfolio. It serves as the landing section,
+ * featuring a prominent headline, a typewriter effect for the sub-headline, and
+ * the SparklesCore animation in the background.
+ *
+ * This component handles its own state for the typewriter effect and does not accept any props.
+ *
+ * @returns {React.ReactElement} A full-screen section element representing the hero banner.
+ */
 const Hero: React.FC = () => {
   // Typewriter State
   const [displayText, setDisplayText] = useState('');

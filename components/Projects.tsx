@@ -37,6 +37,21 @@ const projects: Project[] = [
   }
 ];
 
+/**
+ * @file Renders the "Selected Works" or projects section of the portfolio.
+ * @module Projects
+ */
+
+/**
+ * The Projects component showcases a grid of recent projects. Each project is presented
+ * as a clickable card that, when selected, reveals a detailed slide-over panel
+ * containing more information about the project's problem, solution, and impact.
+ *
+ * This component manages its own state for the currently selected project and
+ * does not accept any props.
+ *
+ * @returns {React.ReactElement} A section element displaying project cards and the details panel.
+ */
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedProject = projects.find(p => p.id === selectedId);

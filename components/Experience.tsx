@@ -52,10 +52,23 @@ const experienceData: ExperienceType[] = [
   }
 ];
 
+/**
+ * @file Renders the "Experience" section of the portfolio.
+ * @module Experience
+ */
+
+/**
+ * The Experience component displays work and education history in a creative,
+ * animated, orbital layout. The most recent experience is featured in the center,
+ * with previous roles and education orbiting around it.
+ *
+ * This component does not accept any props.
+ *
+ * @returns {React.ReactElement} A section element containing the animated experience timeline.
+ */
 const Experience: React.FC = () => {
   return (
     <section className="relative min-h-[90vh] py-24 overflow-hidden flex flex-col items-center justify-center bg-void">
-      
       {/* Background Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_100%)] pointer-events-none" />
 
