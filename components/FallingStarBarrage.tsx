@@ -13,6 +13,20 @@ interface Star {
   isLeader: boolean;
 }
 
+/**
+ * @file Renders a dynamic, full-screen canvas animation of a falling star barrage (meteor shower).
+ * @module FallingStarBarrage
+ */
+
+/**
+ * The FallingStarBarrage component creates a visually stunning, periodic meteor shower effect
+ * that plays in the background of the entire application. It uses the HTML Canvas API
+ * to render stars with trails and glows, creating a sense of depth and motion.
+ *
+ * The animation is self-contained and does not require any props.
+ *
+ * @returns {React.ReactElement} A canvas element that covers the viewport and renders the animation.
+ */
 const FallingStarBarrage: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
