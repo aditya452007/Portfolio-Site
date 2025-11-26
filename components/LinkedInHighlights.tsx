@@ -51,12 +51,23 @@ const posts: SocialPost[] = [
   }
 ];
 
-const Card: React.FC<{ 
-    post: SocialPost; 
-    index: number; 
+/**
+ * Renders a single, interactive 3D card for the desktop view.
+ * This component uses Framer Motion's `useTransform` to create a dynamic
+ * rotational effect based on the current `centerIndex`.
+ *
+ * @param {object} props - The component props.
+ * @param {SocialPost} props.post - The social post data to display.
+ * @param {number} props.index - The index of this card in the array.
+ * @param {MotionValue<number>} props.centerIndex - A MotionValue representing the currently centered card index.
+ * @returns {React.ReactElement} A motion.div element representing the card.
+ */
+const Card: React.FC<{
+    post: SocialPost;
+    index: number;
     centerIndex: MotionValue<number>;
 }> = ({ post, index, centerIndex }) => {
-  
+
   // LOGIC: Rotation depends entirely on the spring-animated centerIndex
   const rotate = useTransform(centerIndex, (current) => (index - current) * 25);
   
@@ -156,7 +167,14 @@ const Card: React.FC<{
   );
 };
 
-// Mobile Card Component
+/**
+ * Renders a simplified, 2D card for the mobile view.
+ * This component is designed for a horizontal scrolling container.
+ *
+ * @param {object} props - The component props.
+ * @param {SocialPost} props.post - The social post data to display.
+ * @returns {React.ReactElement} A div element representing the mobile card.
+ */
 const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
   <div className="min-w-[300px] w-[300px] bg-void/50 border border-white/10 rounded-2xl p-5 snap-center shrink-0 relative overflow-hidden group">
      {/* Ambient Glow */}
@@ -181,10 +199,23 @@ const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
   </div>
 );
 
+/**
+ * @file Renders the "LinkedIn Highlights" section of the portfolio.
+ * @module LinkedInHighlights
+ */
+
+/**
+ * The LinkedInHighlights component displays a curated list of social media posts
+ * in an engaging and interactive format. It features a 3D rotating card carousel
+ * for desktop and a simple swipeable list for mobile.
+ *
+ * This component manages its own state for the active card index and does not accept any props.
+ *
+ * @returns {React.ReactElement} A section element showcasing LinkedIn posts.
+ */
 const LinkedInHighlights: React.FC = () => {
   // Navigation State
   const [activeIndex, setActiveIndex] = useState(1); // Start focused on the 2nd card (Index 1)
-  
   // Motion Values for smooth spring physics on navigation
   const indexMotion = useMotionValue(1);
   const smoothIndex = useSpring(indexMotion, { damping: 20, stiffness: 150 });

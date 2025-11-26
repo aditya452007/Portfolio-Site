@@ -66,6 +66,22 @@ interface Particle {
   isHovered: boolean;
 }
 
+/**
+ * @file Renders "The Lab" section, a physics-based interactive display of smaller projects.
+ * @module TheLab
+ */
+
+/**
+ * The TheLab component creates a "zero-gravity" environment where project links
+ * float around as interactive "particles." These particles drift, collide with
+ * each other and the container walls, and can be hovered over to pause their
+ * movement and reveal more information.
+ *
+ * This component uses `requestAnimationFrame` for a smooth physics simulation and
+ * does not accept any props.
+ *
+ * @returns {React.ReactElement} A section element containing the physics-based project display.
+ */
 const TheLab: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);

@@ -8,6 +8,18 @@ import LinkedInHighlights from './components/LinkedInHighlights';
 import FallingStarBarrage from './components/FallingStarBarrage';
 import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
 
+/**
+ * @file The main entry point component for the entire React application.
+ * @module App
+ */
+
+/**
+ * The `App` component serves as the root of the application, orchestrating the layout
+ * and rendering of all major sections of the portfolio website. It includes global effects
+ * like a custom cursor light, a scroll progress bar, and background visual elements.
+ *
+ * @returns {React.FC} The fully assembled portfolio page with all its components.
+ */
 const App: React.FC = () => {
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
