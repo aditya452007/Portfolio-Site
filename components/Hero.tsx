@@ -1,17 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { Github, Linkedin, Mail } from 'lucide-react';
 
-/**
- * @file Renders the main "Hero" section of the portfolio.
- * @module Hero
- */
-
-/**
- * Renders a background canvas animation with shimmering particles.
- * This component is used within the Hero section to create a dynamic, "sparkling" background effect.
- *
- * @returns {React.ReactElement} A canvas element for the particle animation.
- */
 const SparklesCore = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -79,15 +69,6 @@ const SparklesCore = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-50" />;
 };
 
-/**
- * The main "Hero" component for the portfolio. It serves as the landing section,
- * featuring a prominent headline, a typewriter effect for the sub-headline, and
- * the SparklesCore animation in the background.
- *
- * This component handles its own state for the typewriter effect and does not accept any props.
- *
- * @returns {React.ReactElement} A full-screen section element representing the hero banner.
- */
 const Hero: React.FC = () => {
   // Typewriter State
   const [displayText, setDisplayText] = useState('');
@@ -135,12 +116,27 @@ const Hero: React.FC = () => {
     <section className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden bg-void">
       <SparklesCore />
       
+      {/* Social Navigation - Stuck to Hero */}
+      <nav className="absolute top-6 right-6 z-50 flex gap-4 backdrop-blur-md bg-void/50 p-2 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
+        <a href="https://github.com/aditya452007" target="_blank" rel="noreferrer" className="p-2 text-gray-400 hover:text-neon-cyan transition-colors">
+          <Github size={20} />
+        </a>
+        <a href="https://linkedin.com/in/aaditya-thakur-1a8842332" target="_blank" rel="noreferrer" className="p-2 text-gray-400 hover:text-neon-pink transition-colors">
+          <Linkedin size={20} />
+        </a>
+        <a href="mailto:adityathakur452007@gmail.com" className="p-2 text-gray-400 hover:text-neon-purple transition-colors">
+          <Mail size={20} />
+        </a>
+      </nav>
+      
       <div className="z-10 text-center px-4 max-w-5xl mx-auto">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative inline-block mb-8"
+          {...({
+            initial: { opacity: 0, y: 20 },
+            animate: { opacity: 1, y: 0 },
+            transition: { duration: 0.8 },
+            className: "relative inline-block mb-8"
+          } as any)}
         >
           <div className="absolute -inset-1 rounded-lg bg-gradient-to-r from-neon-cyan to-neon-pink opacity-20 blur-lg animate-pulse"></div>
           <span className="relative px-4 py-1 rounded-full border border-neon-cyan/30 bg-void/80 text-neon-cyan font-mono text-xs tracking-widest uppercase shadow-[0_0_10px_rgba(0,240,255,0.2)]">
@@ -150,10 +146,12 @@ const Hero: React.FC = () => {
 
         {/* Ghost Text Heading - Refined to Ethereal Fade */}
         <motion.h1
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.2 }}
-          className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 cursor-default"
+          {...({
+            initial: { opacity: 0, scale: 0.95 },
+            animate: { opacity: 1, scale: 1 },
+            transition: { duration: 1.2, delay: 0.2 },
+            className: "text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 cursor-default"
+          } as any)}
         >
           <span className="bg-clip-text text-transparent bg-gradient-to-b from-white/5 to-white drop-shadow-[0_0_10px_rgba(255,255,255,0.15)] transition-all duration-700 hover:drop-shadow-[0_0_25px_rgba(255,255,255,0.3)] selection:bg-neon-pink selection:text-white">
             AADITYA THAKUR
@@ -162,10 +160,12 @@ const Hero: React.FC = () => {
 
         {/* Animated Typewriter Tagline - Refined Gradients */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="h-24 md:h-16 flex items-center justify-center"
+          {...({
+            initial: { opacity: 0 },
+            animate: { opacity: 1 },
+            transition: { duration: 1, delay: 0.5 },
+            className: "h-24 md:h-16 flex items-center justify-center"
+          } as any)}
         >
           <p className="text-2xl md:text-3xl lg:text-4xl font-bold font-mono tracking-tight">
              <span className="bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink">
@@ -176,10 +176,12 @@ const Hero: React.FC = () => {
         </motion.div>
 
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1 }}
-            className="mt-12 flex justify-center gap-6 text-xs md:text-sm font-mono text-gray-600 uppercase tracking-widest"
+            {...({
+                initial: { opacity: 0, y: 20 },
+                animate: { opacity: 1, y: 0 },
+                transition: { delay: 1 },
+                className: "mt-12 flex justify-center gap-6 text-xs md:text-sm font-mono text-gray-600 uppercase tracking-widest"
+            } as any)}
         >
             <span className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>

@@ -1,27 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import Hero from './components/Hero';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import TheLab from './components/TheLab';
 import LinkedInHighlights from './components/LinkedInHighlights';
-import FallingStarBarrage from './components/FallingStarBarrage';
-import { Github, Linkedin, Mail, MapPin } from 'lucide-react';
+import ContactVault from './components/ContactVault';
+import SkillGravityWell from './components/SkillGravityWell';
+import ManVsMachine from './components/ManVsMachine';
+import PipelineParadox from './components/PipelineParadox';
+import TerminalOfTruth from './components/TerminalOfTruth';
+import AdityaAI from './components/AdityaAI';
+import { MapPin } from 'lucide-react';
 
-/**
- * @file The main entry point component for the entire React application.
- * @module App
- */
-
-/**
- * The `App` component serves as the root of the application, orchestrating the layout
- * and rendering of all major sections of the portfolio website. It includes global effects
- * like a custom cursor light, a scroll progress bar, and background visual elements.
- *
- * @returns {React.FC} The fully assembled portfolio page with all its components.
- */
 const App: React.FC = () => {
-  const { scrollYProgress } = useScroll();
+  const scrollContainerRef = useRef<HTMLElement>(null);
+  
+  // Target the specific container for scroll progress instead of window
+  const { scrollYProgress } = useScroll({ container: scrollContainerRef });
+  
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
@@ -40,24 +37,12 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="bg-void min-h-screen relative selection:bg-neon-cyan selection:text-void overflow-hidden">
+    // Root container must correspond to #root height: 100%
+    <div className="bg-void h-full w-full relative selection:bg-neon-cyan selection:text-void font-sans">
       
-      {/* GLOBAL VISUAL POLISH: Falling Star Barrage (Meteor Shower) */}
-      <FallingStarBarrage />
-
-      {/* NEBULA LAYER (Neon Galaxy Theme) */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-          {/* Top Left - Deep Purple/Blue */}
-          <div className="absolute top-[-20%] left-[-10%] w-[70vw] h-[70vw] bg-indigo-900/20 blur-[120px] rounded-full mix-blend-screen opacity-60" />
-          
-          {/* Bottom Right - Neon Pink/Purple */}
-          <div className="absolute bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] bg-fuchsia-900/20 blur-[100px] rounded-full mix-blend-screen opacity-50" />
-          
-          {/* Center - Subtle Cyan Hue */}
-          <div className="absolute top-[30%] left-[20%] w-[50vw] h-[50vw] bg-cyan-900/10 blur-[150px] rounded-full mix-blend-screen opacity-40" />
-      </div>
-
-      {/* GLOBAL NOISE OVERLAY - Adds texture/grit to avoid flat plastic look */}
+      {/* --- STATIC BACKGROUND LAYER (Z-INDEX 0) --- */}
+      
+      {/* Global Noise Overlay */}
       <div 
         className="fixed inset-0 pointer-events-none z-50 opacity-[0.05] mix-blend-overlay"
         style={{
@@ -65,7 +50,7 @@ const App: React.FC = () => {
         }}
       />
 
-      {/* Global Cursor/Ambient Light Effect */}
+      {/* Global Ambient Light Cursor */}
       <div 
         className="fixed inset-0 pointer-events-none z-0 transition-opacity duration-700"
         style={{
@@ -76,38 +61,78 @@ const App: React.FC = () => {
       {/* Scroll Progress Bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-neon-pink to-neon-cyan transform origin-left z-50"
-        style={{ scaleX }}
+        style={{ scaleX: scaleX as any }}
       />
 
-      {/* Navigation / Contact Float */}
-      <nav className="fixed top-6 right-6 z-40 flex gap-4 backdrop-blur-md bg-void/50 p-2 rounded-full border border-white/10 shadow-[0_0_20px_rgba(0,0,0,0.5)]">
-        <a href="https://github.com/aditya452007" target="_blank" rel="noreferrer" className="p-2 text-gray-400 hover:text-neon-cyan transition-colors">
-          <Github size={20} />
-        </a>
-        <a href="https://linkedin.com/in/aaditya-thakur-1a8842332" target="_blank" rel="noreferrer" className="p-2 text-gray-400 hover:text-neon-pink transition-colors">
-          <Linkedin size={20} />
-        </a>
-        <a href="mailto:adityathakur452007@gmail.com" className="p-2 text-gray-400 hover:text-neon-purple transition-colors">
-          <Mail size={20} />
-        </a>
-      </nav>
-
-      <main className="relative z-10 flex flex-col gap-32 pb-32">
-        <Hero />
-        <Projects />
-        <LinkedInHighlights />
-        <Experience />
-        <TheLab />
+      {/* --- SCROLL SNAP CONTAINER --- */}
+      <main 
+        ref={scrollContainerRef}
+        className="snap-container"
+      >
         
-        <footer className="w-full py-12 border-t border-white/10 mt-20 flex flex-col items-center justify-center text-gray-500 font-mono text-sm relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-neon-cyan/5 pointer-events-none" />
-          <div className="flex items-center gap-2 mb-4">
-            <MapPin size={16} className="text-neon-cyan" />
-            <span>Bhopal, India (Remote Ready)</span>
-          </div>
-          <p>© 2025 Aaditya Thakur. Built with React & Framer Motion.</p>
-        </footer>
+        {/* SLIDE 1: Hero */}
+        <section className="snap-section">
+          <Hero />
+        </section>
+
+        {/* SLIDE 2: Projects */}
+        <section className="snap-section bg-void">
+          <Projects />
+        </section>
+
+        {/* SLIDE 3: Man Vs Machine */}
+        <section className="snap-section bg-void">
+          <ManVsMachine />
+        </section>
+
+        {/* SLIDE 4: Pipeline Paradox */}
+        <section className="snap-section bg-void">
+          <PipelineParadox />
+        </section>
+
+        {/* SLIDE 5: Social Signals */}
+        <section className="snap-section bg-void">
+          <LinkedInHighlights />
+        </section>
+
+        {/* SLIDE 6: Experience */}
+        <section className="snap-section bg-void">
+          <Experience />
+        </section>
+
+        {/* SLIDE 7: Skills */}
+        <section className="snap-section bg-void">
+          <SkillGravityWell />
+        </section>
+
+        {/* SLIDE 8: The Lab */}
+        <section className="snap-section bg-void">
+          <TheLab />
+        </section>
+
+        {/* SLIDE 9: Contact & Footer */}
+        <section id="contact-section" className="snap-section bg-void !justify-between">
+            <div className="flex-grow flex items-center justify-center w-full">
+                <ContactVault />
+            </div>
+            
+            <footer className="w-full py-8 border-t border-white/10 flex flex-col items-center justify-center text-gray-500 font-mono text-sm relative bg-void">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent to-neon-cyan/5 pointer-events-none" />
+                <div className="flex items-center gap-2 mb-2">
+                    <MapPin size={16} className="text-neon-cyan" />
+                    <span>Bhopal, India (Remote Ready)</span>
+                </div>
+                <p>© 2025 Aaditya Thakur. Built with React & Framer Motion.</p>
+            </footer>
+        </section>
+
       </main>
+
+      {/* --- GOD MODE: TERMINAL OF TRUTH (Bottom Right) --- */}
+      <TerminalOfTruth />
+
+      {/* --- AI ASSISTANT: ADITYA CHATBOT (Bottom Left) --- */}
+      <AdityaAI />
     </div>
   );
 };

@@ -1,118 +1,176 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Github, ExternalLink, Terminal, Brain, Zap } from 'lucide-react';
+import { X, ArrowRight, Github, ExternalLink, Terminal, Brain, Zap, Database, Cpu, Layers } from 'lucide-react';
 import { Project } from '../types';
 
 const projects: Project[] = [
   {
     id: 'mcp-server',
     title: 'OS-Level AI Agent (MCP)',
-    tagline: 'Natural Language Operating System Control',
-    tech: ['Python', 'Model Context Protocol', 'Shell', 'Claude Desktop'],
-    problem: 'System administration and file management via CLI creates friction for non-technical users and slows down rapid debugging for engineers.',
-    solution: 'Engineered a Model Context Protocol (MCP) server that empowers AI agents with secure, permission-based access to the host OS. Allows execution of complex shell commands (Bash/PowerShell) via natural language prompts.',
+    tagline: 'Control your Operating System with natural language.',
+    tech: ['Python', 'Model Context Protocol', 'Shell'],
+    problem: 'Manual CLI operations are slow and prone to syntax errors. Context switching between code editors and terminals kills flow.',
+    solution: 'Secure, permission-based shell execution. Diagnoses system issues and manages files conversationally. Acts as a high-privilege agent wrapper for your OS.',
     impact: 'Enables safe, autonomous diagnosis and resolution of system issues. Reduces context switching by allowing "conversational" file management.',
-    image: 'https://picsum.photos/800/600?random=1',
-    github: 'https://github.com/aditya452007'
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/1.png',
+    github: 'https://github.com/aditya452007/Ai-Agents/tree/main/MCP'
   },
   {
     id: 'biz-agent',
     title: 'Autonomous Business Orchestrator',
-    tagline: 'Full-Suite Business Automation Hub',
-    tech: ['n8n', 'Google Workspace API', 'Telegram API', 'Webhooks'],
-    problem: 'Small business operations suffer from fragmentation across email (Gmail), scheduling (Calendar), and communication (Telegram), leading to missed tasks and manual overhead.',
-    solution: 'Designed an autonomous central hub using n8n that connects the entire suite. The agent intelligently parses emails to schedule meetings, updates task lists, and sends summaries to Telegram.',
-    impact: 'Eliminated manual scheduling and routine email replies. Creates a seamless, self-updating operational loop requiring zero human intervention for standard workflows.',
-    image: 'https://picsum.photos/800/600?random=2'
+    tagline: 'Eliminate manual logistics forever.',
+    tech: ['n8n', 'Google Workspace', 'Telegram API'],
+    problem: 'Fragmentation across email, calendars, and chat apps creates operational drag and missed opportunities.',
+    solution: 'A self-healing operational loop. Parses emails, schedules meetings, and updates tasks autonomously while you sleep. Acts as a central nervous system for business logic.',
+    impact: 'Zero-touch scheduling and communication. Transforms reactive chaos into proactive, automated order.',
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/2.png',
+    github: 'https://github.com/aditya452007/N8N_AI_AGENTS/blob/main/WORKFLOWS/AI-AGENT-KIT/Telegram/Personal%20Assitant.json'
   },
   {
     id: 'predictive-models',
     title: 'Enterprise Predictive Modeling',
-    tagline: 'High-Accuracy Regression Systems',
-    tech: ['Python', 'Scikit-Learn', 'Pandas', 'Matplotlib'],
-    problem: 'Raw environmental and HR datasets are often too noisy to drive strategic decisions regarding carbon footprints or talent acquisition costs.',
-    solution: 'Developed robust regression models for Shell (Carbon Emissions) and IBM (Salary Prediction). Implemented advanced feature selection and hyperparameter tuning.',
-    impact: 'Achieved R² score of 0.85 for carbon predictions and >90% accuracy for salary forecasting, directly aiding data-driven strategy formulation.',
-    image: 'https://picsum.photos/800/600?random=3'
+    tagline: 'Turn noise into strategy.',
+    tech: ['Scikit-Learn', 'Pandas', 'Matplotlib'],
+    problem: 'Raw enterprise data is often too noisy to drive strategic decisions regarding carbon footprints or talent acquisition.',
+    solution: 'High-precision regression systems. Achieved 0.85 R² in Carbon Emissions tracking and >90% accuracy in Salary Forecasting through advanced hyperparameter tuning.',
+    impact: 'Directly converts raw chaotic datasets into clear, actionable executive strategy.',
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/3.png',
+    github: 'https://github.com/aditya452007/AICTE-SHELL-INTERNSHIP-JUNE-2025'
+  },
+  {
+    id: 'rag-agents',
+    title: '🧠 RAG Agents (Doc & Web)',
+    tagline: 'The end of information overload.',
+    tech: ['Gemini 2.5 Flash', 'LangChain', 'FAISS'],
+    problem: 'Static documents and dynamic web content are siloed, making real-time knowledge synthesis impossible.',
+    solution: 'A dual-pipeline intelligence system. Ingests PDFs and scrapes live URLs to answer queries in real-time. Optimized for free-tier CPU environments.',
+    impact: 'Instantaneous extraction of intelligence from static PDFs and dynamic URLs. Chat with your entire data stack.',
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/4.png',
+    github: 'https://github.com/aditya452007/Ai-Agents/tree/main/RAG'
+  },
+  {
+    id: 'n8n-repo',
+    title: 'n8n Automation Repository',
+    tagline: 'The blueprint for total automation.',
+    tech: ['n8n Workflow Templates', 'JSON'],
+    problem: 'Building robust automations from scratch is time-consuming and prone to logic errors.',
+    solution: 'A library of pre-built, production-ready agents. Automate workspace setup, social tracking, and course management instantly.',
+    impact: 'Deploy complex workflows in seconds. A modular arsenal of self-assembling automation bots.',
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/5.png',
+    github: 'https://github.com/aditya452007/N8N_AI_AGENTS'
+  },
+  {
+    id: 'prompt-lib',
+    title: '📂 The Prompt Library',
+    tagline: "Unlock the LLM's full reasoning potential.",
+    tech: ['System Instructions', 'Prompt Engineering'],
+    problem: 'Most LLM outputs are mediocre due to lack of structured, constrained context.',
+    solution: 'Professional-grade prompts for agent creation, coding, and career acceleration. Tested for maximum output quality and reasoning depth.',
+    impact: 'Transforms standard LLMs into expert-level consultants. The ultimate control layer for generative AI.',
+    image: 'https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/6.png',
+    github: 'https://github.com/aditya452007/Prompt-Library'
   }
 ];
 
-/**
- * @file Renders the "Selected Works" or projects section of the portfolio.
- * @module Projects
- */
-
-/**
- * The Projects component showcases a grid of recent projects. Each project is presented
- * as a clickable card that, when selected, reveals a detailed slide-over panel
- * containing more information about the project's problem, solution, and impact.
- *
- * This component manages its own state for the currently selected project and
- * does not accept any props.
- *
- * @returns {React.ReactElement} A section element displaying project cards and the details panel.
- */
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  
   const selectedProject = projects.find(p => p.id === selectedId);
+
+  const handleImageLoad = (id: string) => {
+    setLoadedImages(prev => {
+        const next = new Set(prev);
+        next.add(id);
+        return next;
+    });
+  };
 
   return (
     <section className="relative min-h-screen py-24 px-4 md:px-12 flex flex-col justify-center">
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-neon-purple/5 blur-[120px] pointer-events-none" />
-
+      
       <motion.div 
-        initial={{ opacity: 0, x: -50 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        className="mb-16 border-l-4 border-neon-cyan pl-6"
+        {...({
+            initial: { opacity: 0, x: -50 },
+            whileInView: { opacity: 1, x: 0 },
+            viewport: { once: true },
+            className: "mb-16 border-l-4 border-neon-cyan pl-6"
+        } as any)}
       >
-        <h2 className="text-4xl md:text-5xl font-bold mb-2">Selected Works</h2>
-        <p className="text-gray-400 font-mono">Case Studies & Experiments</p>
+        <h2 className="text-4xl md:text-5xl font-black mb-2 tracking-tighter text-white uppercase">
+            Deployment <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple">Protocols</span>
+        </h2>
+        <p className="text-gray-400 font-mono tracking-widest text-sm uppercase">Tactical Architectures & Systems</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto w-full">
-        {projects.map((project, index) => (
-          <motion.div
-            key={project.id}
-            layoutId={`card-${project.id}`}
-            onClick={() => setSelectedId(project.id)}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            className="group relative cursor-pointer"
-          >
-            {/* Card Content */}
-            <div className="h-[400px] w-full rounded-xl bg-glass border border-white/5 overflow-hidden transition-all duration-500 group-hover:border-neon-cyan/50 group-hover:shadow-[0_0_30px_rgba(0,240,255,0.1)] backdrop-blur-sm">
-                
-              {/* Image Placeholder with Overlay */}
-              <div className="h-1/2 w-full bg-gray-900 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent z-10" />
-                <motion.img 
-                  src={project.image} 
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60 group-hover:opacity-100 grayscale group-hover:grayscale-0"
-                />
-              </div>
+        {projects.map((project, index) => {
+          const isLoaded = loadedImages.has(project.id);
+          return (
+            <motion.div
+                key={project.id}
+                {...({
+                    layoutId: `card-${project.id}`,
+                    onClick: () => setSelectedId(project.id),
+                    initial: { opacity: 0, y: 50 },
+                    whileInView: { opacity: 1, y: 0 },
+                    viewport: { once: true },
+                    transition: { duration: 0.5, delay: index * 0.1 },
+                    className: "group relative cursor-pointer"
+                } as any)}
+            >
+                {/* Card Content */}
+                <div className="h-[400px] w-full rounded-xl bg-glass border border-white/5 overflow-hidden transition-all duration-500 group-hover:border-neon-cyan/50 group-hover:shadow-[0_0_30px_rgba(0,240,255,0.1)] backdrop-blur-sm flex flex-col">
+                    
+                {/* Image Placeholder with Overlay */}
+                <div className="h-[45%] w-full bg-gray-900 relative overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent z-10" />
+                    {/* Tech Status Dots */}
+                    <div className="absolute top-3 right-3 z-20 flex gap-1">
+                        <div className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse shadow-[0_0_5px_rgba(0,240,255,1)]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                    </div>
+                    
+                    {/* Loading Skeleton */}
+                    {!isLoaded && (
+                        <div className="absolute inset-0 z-0 bg-gray-900">
+                            <div className="w-full h-full bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 animate-pulse" />
+                        </div>
+                    )}
 
-              <div className="p-6 relative z-20">
-                <div className="flex gap-2 mb-4 flex-wrap">
-                  {project.tech.slice(0, 3).map(t => (
-                    <span key={t} className="text-[10px] uppercase tracking-wider px-2 py-1 rounded bg-white/5 border border-white/10 text-gray-300">
-                      {t}
-                    </span>
-                  ))}
+                    <motion.img 
+                        src={project.image} 
+                        alt={project.title}
+                        onLoad={() => handleImageLoad(project.id)}
+                        className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 ${isLoaded ? 'opacity-60 group-hover:opacity-100' : 'opacity-0'}`}
+                    />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">{project.title}</h3>
-                <p className="text-gray-400 text-sm line-clamp-3">{project.problem}</p>
-                
-                <div className="mt-6 flex items-center gap-2 text-neon-cyan text-sm font-mono opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
-                  View Case Study <ArrowRight size={16} />
+
+                <div className="p-6 relative z-20 flex-1 flex flex-col justify-between">
+                    <div>
+                        <div className="flex gap-2 mb-3 flex-wrap">
+                        {project.tech.slice(0, 3).map(t => (
+                            <span key={t} className="text-[9px] uppercase tracking-wider px-2 py-1 rounded bg-white/5 border border-white/10 text-gray-300 font-mono">
+                            {t}
+                            </span>
+                        ))}
+                        </div>
+                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors leading-tight">{project.title}</h3>
+                        <p className="text-gray-400 text-xs font-mono line-clamp-3">{project.tagline}</p>
+                    </div>
+                    
+                    <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
+                        <span className="text-[10px] text-gray-500 font-mono uppercase">System Ready</span>
+                        <div className="flex items-center gap-2 text-neon-cyan text-xs font-mono opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                            Initialize <ArrowRight size={12} />
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-          </motion.div>
-        ))}
+                </div>
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* SlideOver Panel */}
@@ -120,30 +178,36 @@ const Projects: React.FC = () => {
         {selectedProject && (
           <>
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedId(null)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              {...({
+                  initial: { opacity: 0 },
+                  animate: { opacity: 1 },
+                  exit: { opacity: 0 },
+                  onClick: () => setSelectedId(null),
+                  className: "fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              } as any)}
             />
             <motion.div
-              layoutId={`card-${selectedProject.id}`} // Shared Layout ID for morphing? Actually distinct for slideover is better
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 h-full w-full md:w-[600px] bg-void border-l border-white/10 z-50 overflow-y-auto shadow-2xl"
+              {...({
+                  layoutId: `card-${selectedProject.id}`,
+                  initial: { x: '100%' },
+                  animate: { x: 0 },
+                  exit: { x: '100%' },
+                  transition: { type: 'spring', damping: 30, stiffness: 300 },
+                  className: "fixed top-0 right-0 h-full w-full md:w-[600px] bg-void border-l border-white/10 z-50 overflow-y-auto shadow-2xl"
+              } as any)}
             >
-              <div className="p-8 md:p-12 relative">
+              <div className="p-8 md:p-12 relative min-h-screen flex flex-col">
                 <button 
                   onClick={() => setSelectedId(null)}
-                  className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-colors text-white"
+                  className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-colors text-white z-50"
                 >
                   <X size={24} />
                 </button>
 
-                <h2 className="text-3xl font-bold mb-2 text-white">{selectedProject.title}</h2>
-                <p className="text-neon-pink font-mono mb-8">{selectedProject.tagline}</p>
+                <div className="mb-8">
+                    <h2 className="text-3xl font-black mb-2 text-white uppercase tracking-tight">{selectedProject.title}</h2>
+                    <p className="text-neon-pink font-mono text-sm">{selectedProject.tagline}</p>
+                </div>
 
                 <div className="flex flex-wrap gap-2 mb-10">
                    {selectedProject.tech.map(t => (
@@ -153,35 +217,36 @@ const Projects: React.FC = () => {
                    ))}
                 </div>
 
-                <div className="space-y-12">
+                <div className="space-y-12 flex-1">
                   <div className="relative pl-6 border-l border-red-500/50">
                     <div className="absolute -left-3 top-0 bg-void p-1 text-red-500"><Zap size={20} /></div>
-                    <h3 className="text-lg font-bold text-gray-200 mb-2">The Problem</h3>
-                    <p className="text-gray-400 leading-relaxed">{selectedProject.problem}</p>
+                    <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Target Inefficiency</h3>
+                    <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.problem}</p>
                   </div>
 
                   <div className="relative pl-6 border-l border-neon-cyan/50">
                     <div className="absolute -left-3 top-0 bg-void p-1 text-neon-cyan"><Brain size={20} /></div>
-                    <h3 className="text-lg font-bold text-gray-200 mb-2">The Solution</h3>
-                    <p className="text-gray-400 leading-relaxed">{selectedProject.solution}</p>
+                    <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Tactical Solution</h3>
+                    <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.solution}</p>
                   </div>
 
                   <div className="relative pl-6 border-l border-green-500/50">
                      <div className="absolute -left-3 top-0 bg-void p-1 text-green-500"><Terminal size={20} /></div>
-                    <h3 className="text-lg font-bold text-gray-200 mb-2">The Impact</h3>
-                    <p className="text-gray-400 leading-relaxed">{selectedProject.impact}</p>
+                    <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Operational Impact</h3>
+                    <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.impact}</p>
                   </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-white/10 flex gap-4">
+                <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row gap-4">
                   {selectedProject.github && (
                     <a 
                       href={selectedProject.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-neon-cyan transition-all text-sm font-mono"
+                      className="flex items-center justify-center gap-2 px-6 py-4 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-neon-cyan transition-all text-sm font-mono uppercase tracking-wider group"
                     >
-                      <Github size={18} /> View Source
+                      <Github size={18} className="group-hover:text-neon-cyan transition-colors" /> 
+                      Access Source Code
                     </a>
                   )}
                   {selectedProject.demo && (
@@ -189,9 +254,9 @@ const Projects: React.FC = () => {
                       href={selectedProject.demo}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center gap-2 px-6 py-3 bg-neon-cyan/10 border border-neon-cyan/20 rounded hover:bg-neon-cyan/20 text-neon-cyan transition-all text-sm font-mono"
+                      className="flex items-center justify-center gap-2 px-6 py-4 bg-neon-cyan/10 border border-neon-cyan/20 rounded hover:bg-neon-cyan/20 text-neon-cyan transition-all text-sm font-mono uppercase tracking-wider"
                     >
-                      <ExternalLink size={18} /> Live Demo
+                      <ExternalLink size={18} /> Initialize Demo
                     </a>
                   )}
                 </div>

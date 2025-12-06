@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
-import { motion, useTransform, useSpring, useMotionValue, MotionValue } from 'framer-motion';
+import { motion, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import type { MotionValue } from 'framer-motion';
 import { Linkedin, ThumbsUp, MessageCircle, Share2, ExternalLink, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { SocialPost } from '../types';
 
@@ -8,84 +8,84 @@ const posts: SocialPost[] = [
   {
     id: 1,
     title: "Google Cloud Arcade Champion",
-    excerpt: "Honored to earn the Champion badge! 🏆 Deep diving into BigQuery optimizations and GenAI pipelines on GCP has been a game-changer for my workflow.",
-    likes: 342,
-    comments: 28,
-    date: "2d ago",
-    image: "https://picsum.photos/seed/gcp/600/300",
-    url: "https://linkedin.com",
-    tags: ["#GCP", "#CloudComputing"]
+    excerpt: "Orchestrating enterprise-scale intelligence. Verified mastery in deploying GenAI pipelines and optimizing BigQuery clusters. This isn't just a badge; it's a license to build scalable cloud infrastructure.",
+    likes: 34,
+    comments: 6,
+    date: "",
+    image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-01%20141711.png",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7338539581966835712/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7338539581966835712%29",
+    tags: ["#GCP", "#CloudComputing","#GenAI","#GoogleCloudArcadeChampion"]
   },
   {
     id: 2,
     title: "Building Autonomous Agents",
     excerpt: "Just shipped a new MCP server that lets Claude Desktop control my local OS shell. The future of devops is conversational. 🤖✨",
-    likes: 856,
-    comments: 142,
-    date: "1w ago",
-    image: "https://picsum.photos/seed/ai/600/300",
-    url: "https://linkedin.com",
+    likes: 21,
+    comments: 2,
+    date: "",
+    image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/1764426307685.jpg",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7400540326849040385/",
     tags: ["#AI", "#Automation", "#MCP"]
   },
-  {
+{
     id: 3,
-    title: "IBM Data Science Intern",
-    excerpt: "Excited to share my salary prediction model achieving >90% accuracy. Applied advanced feature normalization to real-world HR datasets.",
-    likes: 215,
-    comments: 19,
-    date: "2w ago",
-    image: "https://picsum.photos/seed/ibm/600/300",
-    url: "https://linkedin.com",
-    tags: ["#DataScience", "#IBM", "#Python"]
+    title: "IBM: The Build-or-Bust AI Sprint",
+    excerpt: "Resumes are broken. I spent 4 weeks hacking the system with LLMs and Streamlit to fix them. The result? A Resume-Generating AI that proves shipping V1 teaches you more than perfection ever will.",
+    likes: 35,
+    comments: 14,
+    date: "",
+    image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-02%20133455.png",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7392465203868622848/",
+    tags: ["#GenAI", "#Streamlit", "#IBM", "#BuildInPublic"]
   },
   {
     id: 4,
-    title: "Hackathon Win: EcoTech",
-    excerpt: "Our team built a carbon footprint analyzer using Python & Scikit-learn. Proud to take home 1st place! 🌿💻",
-    likes: 189,
-    comments: 34,
-    date: "1mo ago",
-    image: "https://picsum.photos/seed/hack/600/300",
-    url: "https://linkedin.com",
-    tags: ["#Hackathon", "#GreenTech"]
+    title: "Oracle GenAI: Beyond the Prompt",
+    excerpt: "Prompts are easy. Scale is hard. This wasn't just a certification; it was a shift from AI User to Architect. Real AI lives in production.",
+    likes: 50,
+    comments: 10,
+    date: "",
+    image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-01%20142942.png",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7384849300448555009/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7384849300448555009%29",
+    tags: ["#OracleCloud", "#GenAI", "#CloudArchitecture"]
+  },
+  {
+    id: 5,
+    title: "GCP: Escaping Localhost",
+    excerpt: "Code rots on localhost. I mastered GCP foundations to bridge the critical gap between writing local scripts and deploying global, scalable solutions.",
+    likes: 18,
+    comments: 2,
+    date: "",
+    image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/1748666565348.jpg",
+    url: "https://www.linkedin.com/feed/update/urn:li:activity:7334439179407314944/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7334439179407314944%29",
+    tags: ["#GoogleCloud", "#CloudEngineering", "#Scalability"]
   }
 ];
 
-/**
- * Renders a single, interactive 3D card for the desktop view.
- * This component uses Framer Motion's `useTransform` to create a dynamic
- * rotational effect based on the current `centerIndex`.
- *
- * @param {object} props - The component props.
- * @param {SocialPost} props.post - The social post data to display.
- * @param {number} props.index - The index of this card in the array.
- * @param {MotionValue<number>} props.centerIndex - A MotionValue representing the currently centered card index.
- * @returns {React.ReactElement} A motion.div element representing the card.
- */
-const Card: React.FC<{
-    post: SocialPost;
-    index: number;
+const Card: React.FC<{ 
+    post: SocialPost; 
+    index: number; 
     centerIndex: MotionValue<number>;
 }> = ({ post, index, centerIndex }) => {
-
+  
   // LOGIC: Rotation depends entirely on the spring-animated centerIndex
-  const rotate = useTransform(centerIndex, (current) => (index - current) * 25);
+  const rotate = useTransform(centerIndex, (current: number) => (index - current) * 25);
   
   // Pivot point logic - slightly increased multiplier for a wider arc
-  const y = useTransform(rotate, (r) => Math.abs(r) * 1.5); 
+  const y = useTransform(rotate, (r: number) => Math.abs(r) * 1.5); 
   
   // Opacity: Adjusted for better visibility
   // Falls off slower (divisor 180) and clamps at 0.4 opacity min
-  const opacity = useTransform(rotate, (r) => {
+  const opacity = useTransform(rotate, (r: number) => {
     const val = 1 - Math.abs(r) / 180; 
     return val < 0.4 ? 0.4 : val;
   });
 
-  const zIndex = useTransform(rotate, (r) => 100 - Math.ceil(Math.abs(r)));
-  const scale = useTransform(rotate, (r) => 1 - Math.abs(r) / 150);
+  const zIndex = useTransform(rotate, (r: number) => 100 - Math.ceil(Math.abs(r)));
+  const scale = useTransform(rotate, (r: number) => 1 - Math.abs(r) / 150);
 
   // Holographic Sheen Logic
-  const sheenGradient = useTransform(rotate, (r) => {
+  const sheenGradient = useTransform(rotate, (r: number) => {
     return `linear-gradient(${105 + r}deg, transparent 40%, rgba(0, 240, 255, 0.1) 45%, rgba(255, 255, 255, 0.2) 50%, rgba(0, 240, 255, 0.1) 55%, transparent 60%)`;
   });
 
@@ -167,14 +167,7 @@ const Card: React.FC<{
   );
 };
 
-/**
- * Renders a simplified, 2D card for the mobile view.
- * This component is designed for a horizontal scrolling container.
- *
- * @param {object} props - The component props.
- * @param {SocialPost} props.post - The social post data to display.
- * @returns {React.ReactElement} A div element representing the mobile card.
- */
+// Mobile Card Component
 const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
   <div className="min-w-[300px] w-[300px] bg-void/50 border border-white/10 rounded-2xl p-5 snap-center shrink-0 relative overflow-hidden group">
      {/* Ambient Glow */}
@@ -199,23 +192,10 @@ const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
   </div>
 );
 
-/**
- * @file Renders the "LinkedIn Highlights" section of the portfolio.
- * @module LinkedInHighlights
- */
-
-/**
- * The LinkedInHighlights component displays a curated list of social media posts
- * in an engaging and interactive format. It features a 3D rotating card carousel
- * for desktop and a simple swipeable list for mobile.
- *
- * This component manages its own state for the active card index and does not accept any props.
- *
- * @returns {React.ReactElement} A section element showcasing LinkedIn posts.
- */
 const LinkedInHighlights: React.FC = () => {
   // Navigation State
   const [activeIndex, setActiveIndex] = useState(1); // Start focused on the 2nd card (Index 1)
+  
   // Motion Values for smooth spring physics on navigation
   const indexMotion = useMotionValue(1);
   const smoothIndex = useSpring(indexMotion, { damping: 20, stiffness: 150 });
@@ -239,9 +219,6 @@ const LinkedInHighlights: React.FC = () => {
   return (
     <section className="relative py-32 w-full overflow-hidden flex flex-col items-center">
       
-      {/* Background Ambience */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[600px] bg-neon-purple/5 blur-[120px] rounded-full pointer-events-none opacity-50" />
-
       <div className="text-center mb-16 z-10 px-4">
         <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">Social Signals</h2>
         <p className="text-gray-500 font-mono text-sm uppercase tracking-widest">Network Highlights & Community</p>
