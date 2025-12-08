@@ -164,7 +164,6 @@ const Hero: React.FC = () => {
         </a>
       </nav>
       
-      {/* ✅ FIX 1: Increased max-width to 7xl to allow text to spread out */}
       <div className="z-10 text-center px-4 max-w-7xl mx-auto">
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -183,10 +182,8 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.2, delay: 0.2 }}
-            /* ✅ FIX 2: Added 'whitespace-nowrap' to force single line */
             className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter mb-8 cursor-default whitespace-nowrap"
         >
-          {/* ✅ FIX 3: Changed gradient from-white/5 to from-neutral-400 so name is visible */}
           <span className="bg-clip-text text-transparent bg-gradient-to-b from-neutral-400 to-white drop-shadow-[0_0_10px_rgba(255,255,255,0.15)] transition-all duration-700 hover:drop-shadow-[0_0_25px_rgba(255,255,255,0.3)] selection:bg-[#ff0099] selection:text-white">
             AADITYA THAKUR
           </span>

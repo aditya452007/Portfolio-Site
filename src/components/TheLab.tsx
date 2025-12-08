@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-// ✅ FIX: Removed 'Code2' from imports to satisfy TypeScript compiler
 import { ExternalLink, Zap, FlaskConical } from 'lucide-react';
 
 // ==============================================================================

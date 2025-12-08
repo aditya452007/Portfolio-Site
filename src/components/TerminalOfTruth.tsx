@@ -117,7 +117,6 @@ const TerminalOfTruth: React.FC = () => {
   const [input, setInput] = useState('');
   const [matrixMode, setMatrixMode] = useState(false);
   
-  // ✅ FIX: Separated isBooting state logic to prevent locks
   const [isBooting, setIsBooting] = useState(false);
   const hasBootedRef = useRef(false); // Ref to track boot status across renders
   
@@ -145,7 +144,7 @@ const TerminalOfTruth: React.FC = () => {
     setHistory(prev => [...prev, { id: generateId(), type, content }]);
   }, []);
 
-  // --- BOOT SEQUENCE (FIXED) ---
+  // --- BOOT SEQUENCE ---
   useEffect(() => {
     // Only run if opened and we haven't booted in this session yet
     if (isOpen && !hasBootedRef.current) {
@@ -180,8 +179,7 @@ const TerminalOfTruth: React.FC = () => {
       // Cleanup timeouts if component unmounts (closes)
       return () => timeouts.forEach(clearTimeout);
     }
-  }, [isOpen, addLog]); // ✅ Removed 'history' from dependency array to prevent boot loops
-
+  }, [isOpen, addLog]);
   // Focus Management
   useEffect(() => {
     if (isOpen && !isBooting && !isProcessing) {
