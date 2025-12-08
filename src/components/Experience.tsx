@@ -6,18 +6,32 @@ import { Cloud, Terminal, Cpu, Brain, X, GraduationCap, ChevronRight } from 'luc
 // TYPES & DATA INTERFACES
 // ==============================================================================
 
+/**
+ * Represents an experience item in the solar system visualization.
+ */
 interface ExperienceItem {
+  /** Unique identifier for the experience item. */
   id: string;
+  /** Title of the role or position. */
   title: string;
+  /** Detailed role description (e.g. "AI Automation Engineer"). */
   role: string;
+  /** Time period of the experience. */
   timeframe: string;
+  /** Description of the responsibilities and achievements. */
   description: string;
+  /** Icon component to represent the experience. */
   icon: React.ElementType;
-  color: string;        // Tailwind text color class
-  borderColor: string;  // Tailwind border color class
-  shadowColor: string;  // Hex code for box-shadow generation
-  orbitSize: number;    // Width/Height in pixels
-  speed: number;        // Seconds for one full rotation
+  /** Tailwind text color class for the item. */
+  color: string;
+  /** Tailwind border color class for the item. */
+  borderColor: string;
+  /** Hex code for the box-shadow color. */
+  shadowColor: string;
+  /** Diameter of the orbit in pixels. */
+  orbitSize: number;
+  /** Duration of one full rotation in seconds. */
+  speed: number;
 }
 
 // ==============================================================================
@@ -95,6 +109,18 @@ const PLANETS: ExperienceItem[] = [
   }
 ];
 
+/**
+ * Experience Component
+ *
+ * Displays work and education experience as an interactive solar system.
+ *
+ * Features:
+ * - Central node (University) representing the foundation.
+ * - Orbiting planets representing work experiences.
+ * - Interactive orbits: Planets rotate around the center.
+ * - Click to pause orbit and view details in a modal.
+ * - Responsive scaling for different screen sizes.
+ */
 const Experience: React.FC = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   

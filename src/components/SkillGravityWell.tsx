@@ -45,6 +45,9 @@ const SKILL_DATA: Skill[] = [
 // PHYSICS ENGINE
 // ==============================================================================
 
+/**
+ * Represents a single skill particle in the gravity well simulation.
+ */
 class Particle {
   x: number;
   y: number;
@@ -88,6 +91,10 @@ class Particle {
     this.vy = (Math.random() - 0.5) * 0.5;
   }
 
+  /**
+   * Updates the particle's position and velocity based on physics rules.
+   * Handles mouse interaction, collisions, and wall bounces.
+   */
   update(
     ctx: CanvasRenderingContext2D, 
     mouse: { x: number; y: number; isActive: boolean; isDown: boolean },
@@ -183,6 +190,9 @@ class Particle {
     this.draw(ctx);
   }
 
+  /**
+   * Draws the particle on the canvas.
+   */
   draw(ctx: CanvasRenderingContext2D) {
     ctx.save(); // Isolate styles
 
@@ -242,6 +252,9 @@ class Particle {
     ctx.restore();
   }
 
+  /**
+   * Applies an explosive force away from the mouse cursor.
+   */
   explode(mouse: { x: number; y: number }) {
     const dx = this.x - mouse.x;
     const dy = this.y - mouse.y;
@@ -256,6 +269,15 @@ class Particle {
 // COMPONENT
 // ==============================================================================
 
+/**
+ * SkillGravityWell Component
+ *
+ * An interactive physics simulation where skills are represented as floating orbs.
+ * Users can interact with the orbs using their mouse or touch:
+ * - Hover: Gentle orbit effect.
+ * - Click/Hold: Strong gravitational pull (Singularity).
+ * - Release: Explosive force.
+ */
 const SkillGravityWell: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);

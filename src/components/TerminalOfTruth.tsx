@@ -6,12 +6,18 @@ import { Terminal, Minimize2, Loader2, Wifi, Battery, Shield, Cpu, Play, Trash2 
 // TYPES
 // ==============================================================================
 
+/**
+ * Represents a log entry in the terminal history.
+ */
 interface LogEntry {
   id: string;
   type: 'command' | 'response' | 'system' | 'error' | 'success';
   content: string;
 }
 
+/**
+ * Documentation for available commands.
+ */
 interface CommandDoc {
   cmd: string;
   desc: string;
@@ -22,6 +28,12 @@ interface CommandDoc {
 // MATRIX RAIN COMPONENT
 // ==============================================================================
 
+/**
+ * MatrixRain Component
+ *
+ * Renders a falling code "Matrix Rain" effect on an HTML5 Canvas.
+ * Used as a background overlay when enabled via the terminal.
+ */
 const MatrixRain: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dropsRef = useRef<number[]>([]); 
@@ -88,6 +100,18 @@ const MatrixRain: React.FC = () => {
 // MAIN TERMINAL COMPONENT
 // ==============================================================================
 
+/**
+ * TerminalOfTruth Component
+ *
+ * An interactive, gamified command-line interface (CLI).
+ *
+ * Features:
+ * - Boot sequence simulation.
+ * - Command execution (mocked Bash and Python).
+ * - "Matrix Mode" toggle.
+ * - Sidebar with available commands for discovery.
+ * - Interactive typing and scrolling.
+ */
 const TerminalOfTruth: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');

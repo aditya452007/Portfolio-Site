@@ -6,16 +6,29 @@ import { X, ArrowRight, Github, ExternalLink, Terminal, Brain, Zap } from 'lucid
 // TYPES
 // ==============================================================================
 
+/**
+ * Represents a project in the portfolio.
+ */
 export interface Project {
+  /** Unique ID for the project. */
   id: string;
+  /** Project title. */
   title: string;
+  /** Short catchy tagline. */
   tagline: string;
+  /** List of technologies used. */
   tech: string[];
+  /** Description of the problem addressed. */
   problem: string;
+  /** Description of the solution implemented. */
   solution: string;
+  /** Impact or results of the project. */
   impact: string;
+  /** URL to the project image. */
   image: string;
+  /** GitHub repository URL. */
   github?: string;
+  /** Live demo URL. */
   demo?: string;
 }
 
@@ -96,6 +109,18 @@ const projects: Project[] = [
 // COMPONENT
 // ==============================================================================
 
+/**
+ * Projects Component
+ *
+ * Displays a grid of project cards with a detailed slide-over panel.
+ *
+ * Features:
+ * - Responsive grid layout.
+ * - Project cards with hover effects (grayscale to color).
+ * - Detailed slide-over panel for viewing project specifics (Problem, Solution, Impact).
+ * - Lazy loading handling for images.
+ * - Links to GitHub and Live Demos.
+ */
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());

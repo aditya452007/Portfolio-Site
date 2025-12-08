@@ -14,6 +14,16 @@ import ManVsMachine from './components/ManVsMachine';
 import TerminalOfTruth from './components/TerminalOfTruth';
 import AdityaAI from './components/AdityaAI';
 
+/**
+ * The main application component.
+ *
+ * Orchestrates the overall layout, including:
+ * - Global background effects (noise texture, spotlight, scroll progress).
+ * - Composition of all section components (Hero, Projects, Experience, etc.).
+ * - Global overlays (TerminalOfTruth, AdityaAI).
+ *
+ * @returns {React.FC} The rendered application.
+ */
 const App: React.FC = () => {
   // Track window scroll for the top progress bar
   const { scrollYProgress } = useScroll();
@@ -28,8 +38,13 @@ const App: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    /**
+     * Updates the background spotlight position based on mouse movement.
+     * Uses direct DOM manipulation for performance to avoid React re-renders.
+     *
+     * @param {MouseEvent} e - The mouse event.
+     */
     const handleMouseMove = (e: MouseEvent) => {
-      // Direct DOM update to avoid re-rendering the entire React tree on every pixel move
       if (backgroundRef.current) {
         backgroundRef.current.style.background = `radial-gradient(800px at ${e.clientX}px ${e.clientY}px, rgba(0, 240, 255, 0.04), transparent 80%)`;
       }

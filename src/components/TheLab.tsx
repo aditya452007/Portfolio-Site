@@ -6,12 +6,21 @@ import { ExternalLink, Zap, FlaskConical } from 'lucide-react';
 // TYPES & DATA
 // ==============================================================================
 
+/**
+ * Represents a project in "The Lab".
+ */
 interface LabProject {
+  /** Unique ID of the project. */
   id: string;
+  /** Title of the project. */
   title: string;
+  /** URL to the project/experiment. */
   url: string;
+  /** Tailwind class for start of gradient. */
   gradientFrom: string; 
+  /** Tailwind class for end of gradient. */
   gradientTo: string;
+  /** RGBA color string for the glow effect. */
   glowColor: string; 
 }
 
@@ -66,6 +75,9 @@ const projects: LabProject[] = [
   },
 ];
 
+/**
+ * Represents a physics particle for the floating effect.
+ */
 interface Particle {
   x: number;
   y: number;
@@ -81,6 +93,13 @@ interface Particle {
 // COMPONENT
 // ==============================================================================
 
+/**
+ * TheLab Component
+ *
+ * A physics-based "zero-gravity" playground where experimental projects float around.
+ * The projects are represented as cards that bounce off the walls and each other.
+ * Hovering over a card pauses its motion.
+ */
 const TheLab: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);

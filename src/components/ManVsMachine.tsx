@@ -34,7 +34,15 @@ const OUTPUTS = [
   { id: 'time', label: 'Time Saved', icon: Clock, color: '#bd00ff' }, 
 ];
 
-// --- INTERNAL COMPONENT: PIPELINE VIEW (The "Automated" State) ---
+/**
+ * PipelineView Component
+ *
+ * Displays the "Automated" state of the workflow.
+ * Uses GSAP for complex timeline-based animations of data flowing through nodes.
+ *
+ * @param {Object} props - Component props.
+ * @param {() => void} props.onBack - Callback to return to the manual view.
+ */
 const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -235,7 +243,16 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
     );
 };
 
-// --- INTERNAL COMPONENT: MANUAL VIEW (The "Before" State) ---
+/**
+ * ManualView Component
+ *
+ * Displays the "Manual" state (The "Before" picture).
+ * Shows a slow, manual process with a simulated cursor moving files,
+ * contrasting with the high-speed automated version.
+ *
+ * @param {Object} props - Component props.
+ * @param {() => void} props.onAutomate - Callback to trigger the automation transition.
+ */
 const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const cursorRef = useRef<HTMLDivElement>(null);
@@ -384,7 +401,16 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
     );
 };
 
-// --- MAIN WRAPPER ---
+/**
+ * ManVsMachine Component
+ *
+ * A high-level view switching component that contrasts "Manual Labor" vs "Automated Intelligence".
+ *
+ * Features:
+ * - Two main states: Manual View (split screen) and Pipeline View (full flow).
+ * - Animated transitions between states.
+ * - Conceptual demonstration of the value of automation.
+ */
 const ManVsMachine: React.FC = () => {
     const [isAutomating, setIsAutomating] = useState(false);
 

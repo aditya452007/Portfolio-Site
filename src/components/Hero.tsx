@@ -2,6 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail } from 'lucide-react';
 
+/**
+ * SparklesCore Component
+ *
+ * Renders an animated particle background using HTML5 Canvas.
+ * Creates a "sparkle" or "starfield" effect with neon cyan particles
+ * that bounce off the screen edges.
+ */
 const SparklesCore = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -84,6 +91,19 @@ const SparklesCore = () => {
   return <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-50 pointer-events-none" />;
 };
 
+/**
+ * Hero Component
+ *
+ * The main landing section of the portfolio.
+ *
+ * Features:
+ * - Full-screen layout.
+ * - Interactive particle background (`SparklesCore`).
+ * - Typewriter effect for the tagline.
+ * - "Ghost" text heading with gradient effects.
+ * - Social media links.
+ * - Status indicators (Available for Hire, Remote Ready).
+ */
 const Hero: React.FC = () => {
   // Typewriter State
   const [displayText, setDisplayText] = useState('');
