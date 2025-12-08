@@ -15,6 +15,18 @@ import {
   ArrowRight 
 } from 'lucide-react';
 
+/**
+ * ContactVault Component
+ *
+ * A unique, interactive contact section.
+ * - Initial state: A "locked" monolith that requires repeated clicking to "break".
+ * - Unlocked state: An "assembly line" form interface to send a message.
+ *
+ * Features:
+ * - Interactive click-to-unlock mechanic with audio feedback.
+ * - Form submission simulation with an animated assembly line.
+ * - Directs users to the native mail client upon "sending".
+ */
 const ContactVault: React.FC = () => {
   // --- PRESERVED MONOLITH STATE ---
   const [clicks, setClicks] = useState(0);
@@ -31,7 +43,10 @@ const ContactVault: React.FC = () => {
   const crateControls = useAnimation();
   const scannerControls = useAnimation();
 
-  // Initialize Audio Context (Robust Version)
+  /**
+   * Initializes the AudioContext for sound effects.
+   * Handles browser restrictions on auto-playing audio.
+   */
   const initAudio = () => {
     if (!audioContextRef.current) {
       // Cross-browser support
@@ -44,7 +59,11 @@ const ContactVault: React.FC = () => {
     }
   };
 
-  // Preserved Impact Sound logic
+  /**
+   * Plays a sound effect when the vault is clicked.
+   * Pitch increases as the vault gets closer to breaking.
+   * @param {number} progress - The current click count.
+   */
   const playImpactSound = (progress: number) => {
     if (!audioContextRef.current) return;
     const ctx = audioContextRef.current;
@@ -69,7 +88,9 @@ const ContactVault: React.FC = () => {
     osc.stop(ctx.currentTime + 0.1);
   };
 
-  // New Mechanical Sound for Assembly Line
+  /**
+   * Plays a mechanical servo sound for UI interactions.
+   */
   const playServoSound = () => {
     if (!audioContextRef.current) return;
     const ctx = audioContextRef.current;
@@ -89,6 +110,9 @@ const ContactVault: React.FC = () => {
     osc.stop(ctx.currentTime + 0.3);
   };
 
+  /**
+   * Plays a success sound when the vault opens or message is sent.
+   */
   const playSuccessSound = () => {
     if (!audioContextRef.current) return;
     const ctx = audioContextRef.current;
@@ -108,6 +132,10 @@ const ContactVault: React.FC = () => {
     osc.stop(ctx.currentTime + 1);
   };
 
+  /**
+   * Handles the click on the locked vault.
+   * Increments click count and triggers unlock if threshold is reached.
+   */
   const handleClick = () => {
     if (isUnlocked) return;
     initAudio();
@@ -130,6 +158,10 @@ const ContactVault: React.FC = () => {
   const isValidEmail = formData.email.includes('@') && formData.email.includes('.');
   const isFormReady = formData.name && isValidEmail && formData.message;
 
+  /**
+   * Simulates the message sending process with animations and
+   * opens the user's email client.
+   */
   const handleSend = async () => {
     if (!isFormReady) return;
     

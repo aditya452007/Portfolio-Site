@@ -7,15 +7,27 @@ import { Linkedin, ThumbsUp, MessageCircle, ArrowRight, ChevronLeft, ChevronRigh
 // TYPES
 // ==============================================================================
 
+/**
+ * Represents a social media post, specifically from LinkedIn.
+ */
 export interface SocialPost {
+  /** Unique ID of the post. */
   id: number;
+  /** Title or headline of the post. */
   title: string;
+  /** Short summary or excerpt of the post content. */
   excerpt: string;
+  /** Number of likes. */
   likes: number;
+  /** Number of comments. */
   comments: number;
+  /** Year or date of the post. */
   date: string;
+  /** Image URL associated with the post. */
   image: string;
+  /** Link to the original post. */
   url: string;
+  /** List of hashtags or tags. */
   tags: string[];
 }
 
@@ -85,6 +97,12 @@ const posts: SocialPost[] = [
 // COMPONENTS
 // ==============================================================================
 
+/**
+ * Card Component
+ *
+ * Displays a single social post in a 3D carousels style.
+ * Uses Framer Motion's `useTransform` to calculate rotation, scale, opacity, and z-index based on its position relative to the center.
+ */
 const Card: React.FC<{ 
     post: SocialPost; 
     index: number; 
@@ -221,6 +239,17 @@ const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
   </div>
 );
 
+/**
+ * LinkedInHighlights Component
+ *
+ * Displays a curated list of LinkedIn posts to showcase social proof and activity.
+ *
+ * Features:
+ * - 3D Carousel effect for desktop screens.
+ * - Horizontal swipeable list for mobile screens.
+ * - Navigation buttons for the carousel.
+ * - Interactive hover effects on cards.
+ */
 const LinkedInHighlights: React.FC = () => {
   // Navigation State
   const [activeIndex, setActiveIndex] = useState(1); // Start focused on the 2nd card (Index 1)

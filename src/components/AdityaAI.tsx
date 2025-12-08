@@ -88,12 +88,31 @@ When users ask about specific parts of the website, map them to these engineerin
    - Function: Shows that your skills (Python, Cloud, AI) have "weight" and impact.
 `;
 
+/**
+ * Represents a message in the chat conversation.
+ */
 interface ChatMessage {
+  /** The sender of the message. */
   role: 'user' | 'model';
+  /** The content of the message. */
   text: string;
+  /** Whether the message indicates an error state. */
   isError?: boolean;
 }
 
+/**
+ * AdityaAI Component
+ *
+ * An interactive AI chatbot interface powered by the Gemini API.
+ * It serves as a digital avatar for the portfolio owner, answering questions
+ * based on a predefined system instruction (persona).
+ *
+ * Features:
+ * - Floating chat trigger button.
+ * - Real-time chat interface with history.
+ * - Integration with Google Generative AI (Gemini).
+ * - Cyberpunk/Futuristic UI styling.
+ */
 const AdityaAI: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showGreeting, setShowGreeting] = useState(false);
@@ -116,6 +135,9 @@ const AdityaAI: React.FC = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  /**
+   * Handles sending a message to the Gemini API and updating the chat state.
+   */
   const handleSend = async () => {
     if (!input.trim()) return;
     
@@ -180,6 +202,10 @@ const AdityaAI: React.FC = () => {
     }
   };
 
+  /**
+   * Handles keyboard events to allow sending messages with the Enter key.
+   * @param {React.KeyboardEvent} e - The keyboard event.
+   */
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !isLoading) handleSend();
   };
