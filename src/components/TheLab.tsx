@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { ExternalLink, Code2, Zap, FlaskConical } from 'lucide-react';
+// ✅ FIX: Removed 'Code2' from imports to satisfy TypeScript compiler
+import { ExternalLink, Zap, FlaskConical } from 'lucide-react';
 
 // ==============================================================================
 // TYPES & DATA
@@ -9,7 +10,6 @@ interface LabProject {
   id: string;
   title: string;
   url: string;
-  // We now define RGB stops for the gradients
   gradientFrom: string; 
   gradientTo: string;
   glowColor: string; 
@@ -94,7 +94,7 @@ const TheLab: React.FC = () => {
 
     const initParticles = () => {
       const { width, height } = container.getBoundingClientRect();
-      const particleSize = 160; // Increased size for better RGB visibility
+      const particleSize = 160; 
       const radius = particleSize / 2;
 
       particlesRef.current = projects.map((project, i) => ({
