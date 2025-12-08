@@ -1,8 +1,27 @@
 import React, { useState } from 'react';
 import { motion, useTransform, useSpring, useMotionValue } from 'framer-motion';
 import type { MotionValue } from 'framer-motion';
-import { Linkedin, ThumbsUp, MessageCircle, Share2, ExternalLink, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
-import { SocialPost } from '../types';
+import { Linkedin, ThumbsUp, MessageCircle, ArrowRight, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
+
+// ==============================================================================
+// TYPES
+// ==============================================================================
+
+export interface SocialPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  likes: number;
+  comments: number;
+  date: string;
+  image: string;
+  url: string;
+  tags: string[];
+}
+
+// ==============================================================================
+// DATA
+// ==============================================================================
 
 const posts: SocialPost[] = [
   {
@@ -11,10 +30,10 @@ const posts: SocialPost[] = [
     excerpt: "Orchestrating enterprise-scale intelligence. Verified mastery in deploying GenAI pipelines and optimizing BigQuery clusters. This isn't just a badge; it's a license to build scalable cloud infrastructure.",
     likes: 34,
     comments: 6,
-    date: "",
+    date: "2025",
     image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-01%20141711.png",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7338539581966835712/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7338539581966835712%29",
-    tags: ["#GCP", "#CloudComputing","#GenAI","#GoogleCloudArcadeChampion"]
+    tags: ["#GCP", "#CloudComputing", "#GenAI", "#GoogleCloudArcadeChampion"]
   },
   {
     id: 2,
@@ -22,18 +41,18 @@ const posts: SocialPost[] = [
     excerpt: "Just shipped a new MCP server that lets Claude Desktop control my local OS shell. The future of devops is conversational. 🤖✨",
     likes: 21,
     comments: 2,
-    date: "",
+    date: "2025",
     image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/1764426307685.jpg",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7400540326849040385/",
     tags: ["#AI", "#Automation", "#MCP"]
   },
-{
+  {
     id: 3,
     title: "IBM: The Build-or-Bust AI Sprint",
     excerpt: "Resumes are broken. I spent 4 weeks hacking the system with LLMs and Streamlit to fix them. The result? A Resume-Generating AI that proves shipping V1 teaches you more than perfection ever will.",
     likes: 35,
     comments: 14,
-    date: "",
+    date: "2025",
     image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-02%20133455.png",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7392465203868622848/",
     tags: ["#GenAI", "#Streamlit", "#IBM", "#BuildInPublic"]
@@ -44,7 +63,7 @@ const posts: SocialPost[] = [
     excerpt: "Prompts are easy. Scale is hard. This wasn't just a certification; it was a shift from AI User to Architect. Real AI lives in production.",
     likes: 50,
     comments: 10,
-    date: "",
+    date: "2025",
     image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/Screenshot%202025-12-01%20142942.png",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7384849300448555009/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7384849300448555009%29",
     tags: ["#OracleCloud", "#GenAI", "#CloudArchitecture"]
@@ -55,12 +74,16 @@ const posts: SocialPost[] = [
     excerpt: "Code rots on localhost. I mastered GCP foundations to bridge the critical gap between writing local scripts and deploying global, scalable solutions.",
     likes: 18,
     comments: 2,
-    date: "",
+    date: "2025",
     image: "https://ik.imagekit.io/hbypp4kzi/Portfolio%20images/1748666565348.jpg",
     url: "https://www.linkedin.com/feed/update/urn:li:activity:7334439179407314944/?updateEntityUrn=urn%3Ali%3Afs_feedUpdate%3A%28V2%2Curn%3Ali%3Aactivity%3A7334439179407314944%29",
     tags: ["#GoogleCloud", "#CloudEngineering", "#Scalability"]
   }
 ];
+
+// ==============================================================================
+// COMPONENTS
+// ==============================================================================
 
 const Card: React.FC<{ 
     post: SocialPost; 
@@ -75,7 +98,6 @@ const Card: React.FC<{
   const y = useTransform(rotate, (r: number) => Math.abs(r) * 1.5); 
   
   // Opacity: Adjusted for better visibility
-  // Falls off slower (divisor 180) and clamps at 0.4 opacity min
   const opacity = useTransform(rotate, (r: number) => {
     const val = 1 - Math.abs(r) / 180; 
     return val < 0.4 ? 0.4 : val;
@@ -104,7 +126,7 @@ const Card: React.FC<{
       <a href={post.url} target="_blank" rel="noreferrer" className="block h-full w-full relative transition-all duration-500 group-hover:-translate-y-10 group-hover:scale-105">
         
         {/* RGB GLOW BORDER EFFECT */}
-        <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-neon-pink via-neon-cyan to-neon-purple opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500 animate-pulse-fast" />
+        <div className="absolute -inset-[2px] rounded-2xl bg-gradient-to-r from-neon-pink via-[#00f0ff] to-neon-purple opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-500 animate-pulse" />
 
         {/* Holographic Sheen Overlay */}
         <motion.div 
@@ -116,7 +138,7 @@ const Card: React.FC<{
         <div className="absolute -inset-[1px] bg-gradient-to-b from-white/20 to-transparent rounded-2xl opacity-20 group-hover:opacity-0 transition-opacity duration-500 blur-sm" />
 
         {/* Main Card Content */}
-        <div className="h-full w-full bg-void/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative z-10">
+        <div className="h-full w-full bg-[#0a0a0a]/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-6 flex flex-col justify-between shadow-2xl relative z-10">
           
           {/* Header */}
           <div className="flex items-center justify-between mb-4 relative z-10">
@@ -126,15 +148,22 @@ const Card: React.FC<{
                </div>
                <div>
                   <h3 className="font-bold text-gray-200 text-sm leading-tight group-hover:text-white transition-colors">{post.title}</h3>
-                  <span className="text-[10px] uppercase tracking-wider text-gray-600 font-mono group-hover:text-neon-cyan transition-colors">{post.date}</span>
+                  <span className="text-[10px] uppercase tracking-wider text-gray-600 font-mono group-hover:text-[#00f0ff] transition-colors">{post.date}</span>
                </div>
             </div>
           </div>
 
           {/* Image */}
           <div className="h-40 w-full rounded-lg overflow-hidden mb-4 relative group-hover:shadow-[0_0_20px_rgba(0,240,255,0.15)] transition-shadow duration-500">
-             <div className="absolute inset-0 bg-gradient-to-t from-void via-transparent to-transparent z-10 opacity-60" />
-             <img src={post.image} alt={post.title} className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 transform group-hover:scale-110" />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent z-10 opacity-60" />
+             <img 
+                src={post.image} 
+                alt={post.title} 
+                className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700 transform group-hover:scale-110"
+                onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=500&auto=format&fit=crop&q=60';
+                }}
+             />
           </div>
 
           {/* Content */}
@@ -145,7 +174,7 @@ const Card: React.FC<{
           {/* Tags */}
           <div className="flex flex-wrap gap-2 mb-4">
              {post.tags.slice(0, 3).map(tag => (
-                 <span key={tag} className="text-[9px] px-2 py-1 rounded bg-white/5 border border-white/5 text-gray-500 font-mono group-hover:border-neon-cyan/30 group-hover:text-neon-cyan transition-all">
+                 <span key={tag} className="text-[9px] px-2 py-1 rounded bg-white/5 border border-white/5 text-gray-500 font-mono group-hover:border-[#00f0ff]/30 group-hover:text-[#00f0ff] transition-all">
                      {tag}
                  </span>
              ))}
@@ -158,7 +187,7 @@ const Card: React.FC<{
                <span className="flex items-center gap-1 group-hover:text-green-400 transition-colors"><MessageCircle size={12} /> {post.comments}</span>
             </div>
             <div className="flex items-center gap-1 text-gray-700 group-hover:text-neon-pink transition-colors opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 duration-300">
-                Read Post <ArrowRight size={12} />
+               Read Post <ArrowRight size={12} />
             </div>
           </div>
         </div>
@@ -169,9 +198,9 @@ const Card: React.FC<{
 
 // Mobile Card Component
 const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
-  <div className="min-w-[300px] w-[300px] bg-void/50 border border-white/10 rounded-2xl p-5 snap-center shrink-0 relative overflow-hidden group">
+  <div className="min-w-[300px] w-[300px] bg-[#0a0a0a]/50 border border-white/10 rounded-2xl p-5 snap-center shrink-0 relative overflow-hidden group">
      {/* Ambient Glow */}
-     <div className="absolute top-0 right-0 w-32 h-32 bg-neon-cyan/5 blur-[50px] pointer-events-none" />
+     <div className="absolute top-0 right-0 w-32 h-32 bg-[#00f0ff]/5 blur-[50px] pointer-events-none" />
      
      <div className="flex items-center justify-between mb-4 relative z-10">
         <div className="flex items-center gap-2">
@@ -180,12 +209,12 @@ const MobileCard: React.FC<{ post: SocialPost }> = ({ post }) => (
         </div>
      </div>
      
-     <h3 className="font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors">{post.title}</h3>
+     <h3 className="font-bold text-white mb-2 group-hover:text-[#00f0ff] transition-colors">{post.title}</h3>
      <p className="text-xs text-gray-400 mb-6 line-clamp-3 leading-relaxed">{post.excerpt}</p>
      
      <div className="flex justify-between items-center text-xs text-gray-500 font-mono border-t border-white/5 pt-4">
         <span>{post.likes} Likes</span>
-        <a href={post.url} className="text-white flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+        <a href={post.url} target="_blank" rel="noreferrer" className="text-white flex items-center gap-1 bg-white/5 px-3 py-1 rounded-full border border-white/5 hover:bg-white/10 transition-colors">
             Read <ExternalLink size={10} />
         </a>
      </div>
@@ -217,33 +246,35 @@ const LinkedInHighlights: React.FC = () => {
   };
 
   return (
-    <section className="relative py-32 w-full overflow-hidden flex flex-col items-center">
+    <section className="relative py-32 w-full overflow-hidden flex flex-col items-center bg-[#0a0a0a]">
       
       <div className="text-center mb-16 z-10 px-4">
-        <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight">Social Signals</h2>
+        <h2 className="text-4xl md:text-5xl font-bold mb-3 tracking-tight text-white">Social Signals</h2>
         <p className="text-gray-500 font-mono text-sm uppercase tracking-widest">Network Highlights & Community</p>
       </div>
 
       {/* Desktop Interaction Zone */}
       <div className="hidden md:flex relative h-[600px] w-full max-w-7xl justify-center items-start perspective-1000 overflow-hidden">
         {/* Vignette Masks */}
-        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-void to-transparent z-20 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-void to-transparent z-20 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#0a0a0a] to-transparent z-20 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#0a0a0a] to-transparent z-20 pointer-events-none" />
 
         {/* Functional Navigation Buttons */}
         <button 
             onClick={cycleLeft}
-            className="absolute left-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-neon-cyan hover:bg-white/10 hover:border-neon-cyan transition-all duration-300 backdrop-blur-md group"
+            className={`absolute left-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-[#00f0ff] hover:bg-white/10 hover:border-[#00f0ff] transition-all duration-300 backdrop-blur-md group ${activeIndex <= 0 ? 'opacity-20 cursor-not-allowed' : 'opacity-100'}`}
             disabled={activeIndex <= 0}
+            aria-label="Previous Post"
         >
-            <ChevronLeft size={32} className={`transform group-hover:scale-110 transition-transform ${activeIndex <= 0 ? 'opacity-20' : 'opacity-100'}`} />
+            <ChevronLeft size={32} className="transform group-hover:scale-110 transition-transform" />
         </button>
         <button 
             onClick={cycleRight}
-            className="absolute right-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-neon-pink hover:bg-white/10 hover:border-neon-pink transition-all duration-300 backdrop-blur-md group"
+            className={`absolute right-8 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-white/5 border border-white/10 text-white/50 hover:text-[#ff0099] hover:bg-white/10 hover:border-[#ff0099] transition-all duration-300 backdrop-blur-md group ${activeIndex >= posts.length - 1 ? 'opacity-20 cursor-not-allowed' : 'opacity-100'}`}
             disabled={activeIndex >= posts.length - 1}
+            aria-label="Next Post"
         >
-            <ChevronRight size={32} className={`transform group-hover:scale-110 transition-transform ${activeIndex >= posts.length - 1 ? 'opacity-20' : 'opacity-100'}`} />
+            <ChevronRight size={32} className="transform group-hover:scale-110 transition-transform" />
         </button>
 
         {/* The Semi-Sphere Container */}
@@ -271,6 +302,11 @@ const LinkedInHighlights: React.FC = () => {
          {posts.map(post => (
             <MobileCard key={post.id} post={post} />
          ))}
+      </div>
+      
+      {/* Mobile Hint */}
+      <div className="md:hidden text-center text-gray-700 font-mono text-[10px] uppercase tracking-[0.3em] opacity-50 mt-4">
+        Swipe to Explore
       </div>
 
     </section>

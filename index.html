@@ -3,97 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <meta name="theme-color" content="#050505" />
+    
+    <meta name="description" content="Aaditya Thakur | AI Automation Engineer. Specializing in Autonomous Agents, RAG Systems, and Scalable Cloud Architecture." />
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>">
+    
     <title>Aaditya Thakur | AI Automation Engineer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <!-- GSAP Dependencies -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              void: '#020202',
-              neon: {
-                cyan: '#00f0ff',
-                pink: '#ff00aa',
-                purple: '#bd00ff',
-              },
-              glass: 'rgba(255, 255, 255, 0.03)',
-              'glass-hover': 'rgba(255, 255, 255, 0.08)',
-            },
-            fontFamily: {
-              sans: ['Inter', 'sans-serif'],
-              mono: ['JetBrains Mono', 'monospace'],
-            },
-            animation: {
-              'spin-slow': 'spin 20s linear infinite',
-              'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            }
-          }
-        }
-      }
-    </script>
-    <style>
-      /* CRITICAL: Lock the outer frame to viewport height */
-      html, body, #root {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden; /* Disable native body scroll */
-      }
-      
-      /* The Main Scroll Container */
-      .snap-container {
-        height: 100%;
-        width: 100%;
-        overflow-y: scroll;
-        scroll-snap-type: y mandatory; /* Force snap to nearest point */
-        scroll-behavior: smooth; /* Smooth gliding */
-        scrollbar-width: none; /* Firefox */
-        -ms-overflow-style: none; /* IE */
-        position: relative;
-        z-index: 10;
-      }
-      
-      .snap-container::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
-      }
-
-      /* Individual Slide Sections */
-      .snap-section {
-        scroll-snap-align: start;
-        scroll-snap-stop: always; /* Force stop at each section (Deck of Cards feel) */
-        min-height: 100vh;
-        width: 100%;
-        position: relative;
-        overflow: hidden; /* Ensure slide content doesn't bleed */
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "gsap/": "https://aistudiocdn.com/gsap@^3.13.0/",
-    "gsap": "https://aistudiocdn.com/gsap@^3.13.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.31.0"
-  }
-}
-</script>
-</head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  </head>
+  
+  <body style="background-color: #050505; color: white; margin: 0;">
     <div id="root"></div>
+    <script type="module" src="/src/index.tsx"></script>
   </body>
 </html>

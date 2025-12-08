@@ -1,11 +1,16 @@
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import { gsap } from 'gsap';
+import gsap from "gsap";
 import { motion, AnimatePresence } from 'framer-motion';
+import { ScrollTrigger } from "gsap/ScrollTrigger"; 
+
 import { 
     MousePointer, FolderOpen, FileText, Sheet, Zap, CheckCircle2, 
     Database, Globe, Cpu, Clock, Webhook, Filter, Brain, FileJson, 
-    Gem, Image as ImageIcon, Video, AudioWaveform, DollarSign, ArrowLeft 
+    Gem, Image as ImageIcon, Video, DollarSign, ArrowLeft, Activity
 } from 'lucide-react';
+
+// REGISTER THE PLUGIN
+gsap.registerPlugin(ScrollTrigger);
 
 // --- PIPELINE CONSTANTS ---
 const NODES = [
@@ -20,7 +25,7 @@ const INPUTS = [
   { id: 'text', label: 'Raw Text', icon: FileText, color: '#f87171' },
   { id: 'img', label: 'Images', icon: ImageIcon, color: '#fb923c' },
   { id: 'vid', label: 'Video', icon: Video, color: '#facc15' },
-  { id: 'audio', label: 'Audio', icon: AudioWaveform, color: '#22d3ee' },
+  { id: 'audio', label: 'Audio', icon: Activity, color: '#22d3ee' },
 ];
 
 const OUTPUTS = [
@@ -43,15 +48,14 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.5 });
 
             // --- 1. INITIAL STATE (Reset) ---
-            // Inputs visible at start position
             gsap.set(inputRefs.current, { opacity: 1, scale: 1, x: 0, y: 0 });
-            // Outputs hidden
             gsap.set(outputRefs.current, { opacity: 0, scale: 0, x: 0, y: 0 });
+            
             // Lines empty (scale 0)
             gsap.set(lineRefs.current, { 
                 scaleX: isMobile ? 1 : 0, 
                 scaleY: isMobile ? 0 : 1, 
-                opacity: 0.2, // Dim line visible
+                opacity: 0.2, 
                 transformOrigin: isMobile ? "top" : "left" 
             });
             
@@ -67,7 +71,6 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             });
 
             // --- 2. INPUT INGESTION ---
-            // Move inputs into Node 0
             tl.to(inputRefs.current, {
                 x: isMobile ? 0 : 60,
                 y: isMobile ? 60 : 0,
@@ -82,7 +85,6 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             NODES.forEach((_, index) => {
                 const node = nodeRefs.current[index];
                 const line = lineRefs.current[index];
-                const nextNode = nodeRefs.current[index + 1];
 
                 if (!node) return;
 
@@ -110,8 +112,8 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 // Step C: Animate Line to Next Node (if exists)
                 if (index < NODES.length - 1 && line) {
                     tl.to(line, {
-                        scaleX: isMobile ? 1 : 1, // Full fill horizontal
-                        scaleY: isMobile ? 1 : 1, // Full fill vertical
+                        scaleX: 1, // Full fill horizontal
+                        scaleY: 1, // Full fill vertical
                         opacity: 1, // Bright
                         duration: 0.3, // Speed of travel
                         ease: "none" // Linear flow
@@ -150,7 +152,7 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             {/* Header */}
             <div className="relative z-10 text-center mb-16">
                 <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-2">
-                The <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink animate-pulse">Pipeline</span>
+                The <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] via-[#bd00ff] to-[#ff0099] animate-pulse">Pipeline</span>
                 </h2>
                 <p className="text-gray-500 font-mono text-xs uppercase tracking-widest">Autonomous Data Transformation</p>
             </div>
@@ -175,15 +177,15 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                             {/* Node Card */}
                             <div 
                                 ref={el => { nodeRefs.current[index] = el }} 
-                                className="w-16 h-16 md:w-24 md:h-24 bg-void rounded-2xl flex items-center justify-center relative overflow-hidden transition-all duration-300 border border-white/10 shadow-lg"
+                                className="w-16 h-16 md:w-24 md:h-24 bg-[#0a0a0a] rounded-2xl flex items-center justify-center relative overflow-hidden transition-all duration-300 border border-white/10 shadow-lg"
                             >
                                 {/* Active Gradient Border */}
                                 <div className="absolute inset-0 p-[2px] rounded-2xl opacity-0 transition-opacity duration-300 node-bg">
-                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-[length:400%_400%] animate-[gradient-xy_3s_ease_infinite]" />
-                                    <div className="absolute inset-[2px] bg-void rounded-xl" />
+                                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00f0ff] via-[#bd00ff] to-[#ff0099] bg-[length:400%_400%] animate-[gradient-xy_3s_ease_infinite]" />
+                                    <div className="absolute inset-[2px] bg-[#0a0a0a] rounded-xl" />
                                 </div>
                                 {/* Inner Glow */}
-                                <div className="node-bg absolute inset-0 bg-gradient-to-br from-neon-cyan/20 to-neon-purple/20 opacity-0 transition-opacity duration-300" />
+                                <div className="node-bg absolute inset-0 bg-gradient-to-br from-[#00f0ff]/20 to-[#bd00ff]/20 opacity-0 transition-opacity duration-300" />
                                 
                                 <node.icon size={28} className="node-icon relative z-20 text-white transition-colors duration-300" />
                             </div>
@@ -191,7 +193,7 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                             <span className="absolute -bottom-8 text-[10px] font-mono text-gray-500 uppercase tracking-widest whitespace-nowrap">{node.label}</span>
                         </div>
 
-                        {/* Connecting Line (Logic: Dim track + Lit beam) */}
+                        {/* Connecting Line */}
                         {index < NODES.length - 1 && (
                             <div className="relative w-1 h-12 md:w-16 md:h-1 flex items-center justify-center">
                                 {/* Dim Track */}
@@ -200,7 +202,7 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                                 {/* Lit Beam (Animated) */}
                                 <div 
                                     ref={el => { lineRefs.current[index] = el }} 
-                                    className="absolute inset-0 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink shadow-[0_0_15px_rgba(0,240,255,0.5)] rounded-full"
+                                    className="absolute inset-0 bg-gradient-to-r from-[#00f0ff] via-[#bd00ff] to-[#ff0099] shadow-[0_0_15px_rgba(0,240,255,0.5)] rounded-full"
                                     style={{ transformOrigin: 'left' }} 
                                 />
                             </div>
@@ -211,11 +213,11 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
                 {/* Outputs */}
                 <div className="flex md:flex-col flex-row gap-4 md:ml-10 mt-12 md:mt-0 relative z-20">
                     {OUTPUTS.map((output, i) => (
-                        <div key={output.id} ref={el => { outputRefs.current[i] = el }} className="flex items-center gap-2 px-4 py-3 bg-neon-cyan/10 rounded-lg border border-neon-cyan/30 backdrop-blur-sm shadow-[0_0_15px_rgba(0,240,255,0.1)]">
+                        <div key={output.id} ref={el => { outputRefs.current[i] = el }} className="flex items-center gap-2 px-4 py-3 bg-[#00f0ff]/10 rounded-lg border border-[#00f0ff]/30 backdrop-blur-sm shadow-[0_0_15px_rgba(0,240,255,0.1)]">
                             <output.icon size={18} style={{ color: output.color }} />
                             <div className="flex flex-col">
                                 <span className="text-[10px] font-bold text-white uppercase leading-none">{output.label}</span>
-                                <span className="text-[8px] font-mono text-neon-cyan/70">Generated</span>
+                                <span className="text-[8px] font-mono text-[#00f0ff]/70">Generated</span>
                             </div>
                         </div>
                     ))}
@@ -254,7 +256,17 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
         if (!ctx) return;
         let animationFrameId: number;
         
-        const resize = () => { canvas.width = window.innerWidth / 2; canvas.height = window.innerHeight; };
+        const resize = () => { 
+            // Robust logic: Use parent size, not window, to avoid breaking layout
+            const parent = canvas.parentElement;
+            if(parent) {
+                canvas.width = parent.offsetWidth; 
+                canvas.height = parent.offsetHeight;
+            } else {
+                canvas.width = window.innerWidth / 2;
+                canvas.height = window.innerHeight;
+            }
+        };
         resize();
         
         const chars = "10";
@@ -263,6 +275,15 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
         const drops: number[] = new Array(columns).fill(0).map(() => Math.random() * -100);
 
         const draw = () => {
+            // Re-check width in case of sudden layout shifts
+            if (Math.random() > 0.99) {
+                 const parent = canvas.parentElement;
+                 if(parent && canvas.width !== parent.offsetWidth) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                 }
+            }
+
             ctx.fillStyle = 'rgba(5, 5, 5, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = '#00FF9C'; 
@@ -276,7 +297,12 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
             animationFrameId = requestAnimationFrame(draw);
         };
         draw();
-        return () => cancelAnimationFrame(animationFrameId);
+        
+        window.addEventListener('resize', resize);
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+            window.removeEventListener('resize', resize);
+        };
     }, []);
 
     // Cursor Animation
@@ -328,18 +354,18 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
              </div>
 
              {/* RIGHT SIDE: AUTOMATED */}
-             <div className="w-1/2 h-full bg-void relative flex flex-col items-center justify-center overflow-hidden">
+             <div className="w-1/2 h-full bg-[#0a0a0a] relative flex flex-col items-center justify-center overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover opacity-30" />
                 <div className="relative z-10 text-center">
                     <div className="flex items-center justify-center gap-4 mb-8">
-                         <div className="w-12 h-12 bg-void border border-neon-cyan rounded-lg flex items-center justify-center animate-pulse"><Globe size={24} className="text-neon-cyan" /></div>
-                         <div className="w-8 h-[2px] bg-neon-cyan/50" />
-                         <div className="w-12 h-12 bg-void border border-neon-purple rounded-lg flex items-center justify-center animate-pulse delay-75"><Cpu size={24} className="text-neon-purple" /></div>
-                         <div className="w-8 h-[2px] bg-neon-purple/50" />
-                         <div className="w-12 h-12 bg-neon-cyan/20 border border-neon-cyan rounded-lg flex items-center justify-center animate-bounce"><CheckCircle2 size={24} className="text-neon-cyan" /></div>
+                         <div className="w-12 h-12 bg-[#0a0a0a] border border-[#00f0ff] rounded-lg flex items-center justify-center animate-pulse"><Globe size={24} className="text-[#00f0ff]" /></div>
+                         <div className="w-8 h-[2px] bg-[#00f0ff]/50" />
+                         <div className="w-12 h-12 bg-[#0a0a0a] border border-[#bd00ff] rounded-lg flex items-center justify-center animate-pulse delay-75"><Cpu size={24} className="text-[#bd00ff]" /></div>
+                         <div className="w-8 h-[2px] bg-[#bd00ff]/50" />
+                         <div className="w-12 h-12 bg-[#00f0ff]/20 border border-[#00f0ff] rounded-lg flex items-center justify-center animate-bounce"><CheckCircle2 size={24} className="text-[#00f0ff]" /></div>
                     </div>
                     <h3 className="text-3xl font-black text-white mb-2 tracking-tighter uppercase">THE AADITYA WAY</h3>
-                    <div className="flex items-center justify-center gap-2 font-mono text-neon-cyan text-xl mb-4 text-shadow-neon"><Zap size={18} fill="currentColor" /> {autoTime} sec</div>
+                    <div className="flex items-center justify-center gap-2 font-mono text-[#00f0ff] text-xl mb-4 text-shadow-neon"><Zap size={18} fill="currentColor" /> {autoTime} sec</div>
                 </div>
              </div>
 
@@ -347,11 +373,11 @@ const ManualView: React.FC<{ onAutomate: () => void }> = ({ onAutomate }) => {
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
                 <button
                   onClick={onAutomate}
-                  className="group relative flex items-center gap-3 px-8 py-5 bg-black border-2 border-neon-cyan shadow-[0_0_20px_rgba(0,240,255,0.3)] rounded-full text-white font-mono text-xs uppercase tracking-widest hover:scale-110 hover:shadow-[0_0_40px_rgba(0,240,255,0.6)] transition-all outline-none select-none overflow-hidden"
+                  className="group relative flex items-center gap-3 px-8 py-5 bg-black border-2 border-[#00f0ff] shadow-[0_0_20px_rgba(0,240,255,0.3)] rounded-full text-white font-mono text-xs uppercase tracking-widest hover:scale-110 hover:shadow-[0_0_40px_rgba(0,240,255,0.6)] transition-all outline-none select-none overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-neon-cyan/10 animate-pulse" />
-                  <Zap size={18} className="text-neon-cyan relative z-10 animate-[spin_3s_linear_infinite]" />
-                  <span className="relative z-10 font-bold text-neon-cyan group-hover:text-white transition-colors">Automate with Aaditya</span>
+                  <div className="absolute inset-0 bg-[#00f0ff]/10 animate-pulse" />
+                  <Zap size={18} className="text-[#00f0ff] relative z-10 animate-[spin_3s_linear_infinite]" />
+                  <span className="relative z-10 font-bold text-[#00f0ff] group-hover:text-white transition-colors">Automate with Aaditya</span>
                 </button>
              </div>
         </div>
@@ -363,31 +389,27 @@ const ManVsMachine: React.FC = () => {
     const [isAutomating, setIsAutomating] = useState(false);
 
     return (
-        <section className="relative w-full h-[90vh] min-h-[700px] bg-void border-t border-b border-white/5 overflow-hidden">
+        <section className="relative w-full h-[90vh] min-h-[700px] bg-[#0a0a0a] border-t border-b border-white/5 overflow-hidden">
             <AnimatePresence mode="wait">
                 {!isAutomating ? (
                     <motion.div 
                         key="manual"
-                        {...({
-                            initial: { opacity: 0 },
-                            animate: { opacity: 1 },
-                            exit: { opacity: 0, scale: 0.95, filter: "blur(10px)" },
-                            transition: { duration: 0.5 },
-                            className: "w-full h-full"
-                        } as any)}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full h-full"
                     >
                         <ManualView onAutomate={() => setIsAutomating(true)} />
                     </motion.div>
                 ) : (
                     <motion.div 
                         key="pipeline"
-                        {...({
-                            initial: { opacity: 0, scale: 1.05, filter: "blur(10px)" },
-                            animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
-                            exit: { opacity: 0 },
-                            transition: { duration: 0.5 },
-                            className: "w-full h-full"
-                        } as any)}
+                        initial={{ opacity: 0, scale: 1.05, filter: "blur(10px)" }}
+                        animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="w-full h-full"
                     >
                         <PipelineView onBack={() => setIsAutomating(false)} />
                     </motion.div>

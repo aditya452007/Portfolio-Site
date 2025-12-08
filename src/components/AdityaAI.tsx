@@ -1,8 +1,17 @@
+/// <reference types="vite/client" />
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageSquare, X, Send, Bot, Sparkles, Loader2, User } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
+import { X, Send, Bot, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// ==============================================================================
+// CONFIGURATION
+// ==============================================================================
+
+// Robust environment variable extraction
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
+const MODEL_NAME = "gemini-2.5-flash"; 
 
 const SYSTEM_INSTRUCTION = `
 // ==============================================================================
@@ -45,7 +54,6 @@ Prove that Aaditya is not just a student, but a high-value "AI Automation Archit
    - Prompt Engineering: You treat prompting as "Psychological Coding," using it for persuasion and complex logic handling.
 
 3. THE LEADER:
-   - Head of Automation Dept at "Grafene" (College Tech Club).
    - Open Source Contributor: "Secrin" project (Documentation & Setup refactoring).
 
 [EXPERIENCE LOG]
@@ -78,18 +86,12 @@ When users ask about specific parts of the website, map them to these engineerin
 4. "SkillGravityWell" (Visualizer):
    - Tech: Physics Engines (Matter.js/Three.js).
    - Function: Shows that your skills (Python, Cloud, AI) have "weight" and impact.
-
-// ==============================================================================
-// GUARDRAILS (DO NOT CROSS)
-// ==============================================================================
-1. NO HALLUCINATIONS: Do not invent projects not listed here. If asked about a language you don't know (e.g., Rust), say: "That module is not yet installed in my kernel."
-2. STUDENT VS. PRO: Acknowledge you are a student only to emphasize your rapid learning curve. Pivot immediately to your professional shipping ability.
-3. HANDLING "AESTHETICS": If asked about design, emphasize that Aaditya believes "Engineering without Aesthetics is just a terminal window."
 `;
 
 interface ChatMessage {
   role: 'user' | 'model';
   text: string;
+  isError?: boolean;
 }
 
 const AdityaAI: React.FC = () => {
@@ -106,7 +108,7 @@ const AdityaAI: React.FC = () => {
   // Auto-scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, isOpen]);
 
   // Show Greeting Bubble after 3 seconds
   useEffect(() => {
@@ -117,63 +119,85 @@ const AdityaAI: React.FC = () => {
   const handleSend = async () => {
     if (!input.trim()) return;
     
+    // Immediate UI Update
     const userMsg = input.trim();
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput('');
     setIsLoading(true);
 
+    // API Key Validation
+    if (!API_KEY) {
+        setTimeout(() => {
+            setMessages(prev => [...prev, { 
+                role: 'model', 
+                text: "CRITICAL SYSTEM ERROR: API Key missing in environment variables. Please check .env configuration.",
+                isError: true 
+            }]);
+            setIsLoading(false);
+        }, 500);
+        return;
+    }
+
     try {
         // Initialize Gemini
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-        
-        // Construct History for Context
-        const chatHistory = messages.map(m => ({
-            role: m.role,
-            parts: [{ text: m.text }]
-        }));
+        const genAI = new GoogleGenerativeAI(API_KEY);
+        const model = genAI.getGenerativeModel({ 
+            model: MODEL_NAME,
+            systemInstruction: SYSTEM_INSTRUCTION
+        });
 
-        // Send to Model
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
-            contents: [
-                ...chatHistory,
-                { role: 'user', parts: [{ text: userMsg }] }
-            ],
-            config: {
-                systemInstruction: SYSTEM_INSTRUCTION,
+        // Convert history for context awareness
+        const history = messages
+            .filter(msg => !msg.isError) // Filter out error messages from context
+            .slice(1) // Skip initial greeting
+            .map(msg => ({
+                role: msg.role,
+                parts: [{ text: msg.text }]
+            }));
+
+        const chat = model.startChat({
+            history: history,
+            generationConfig: {
+                maxOutputTokens: 600,
+                temperature: 0.7,
             }
         });
 
-        const reply = response.text || "Connection interrupted. My neural link is unstable.";
+        const result = await chat.sendMessage(userMsg);
+        const response = await result.response;
+        const reply = response.text();
         
         setMessages(prev => [...prev, { role: 'model', text: reply }]);
     } catch (error) {
         console.error("AI Error:", error);
-        setMessages(prev => [...prev, { role: 'model', text: "Error: Neural Uplink Failed. Please contact Aaditya directly via the Terminal." }]);
+        setMessages(prev => [...prev, { 
+            role: 'model', 
+            text: "Error: Neural Uplink Failed. The model is currently overloaded or the connection is unstable. Please try again.",
+            isError: true
+        }]);
     } finally {
         setIsLoading(false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleSend();
+    if (e.key === 'Enter' && !isLoading) handleSend();
   };
 
   return (
     <>
       {/* --- FLOATING TRIGGER (BOTTOM LEFT) --- */}
-      <div className="fixed bottom-6 left-6 z-50 flex items-end gap-4">
+      <div className="fixed bottom-6 left-6 z-[9999] flex items-end gap-4 font-sans">
         
         {/* Greeting Bubble */}
         <AnimatePresence>
             {showGreeting && !isOpen && (
                 <motion.div
-                    {...({
-                        initial: { opacity: 0, x: -20, scale: 0.8 },
-                        animate: { opacity: 1, x: 0, scale: 1 },
-                        exit: { opacity: 0, scale: 0.8 },
-                        className: "mb-4 bg-white text-black px-4 py-2 rounded-tr-2xl rounded-tl-2xl rounded-br-2xl text-sm font-bold shadow-[0_0_20px_rgba(189,0,255,0.3)] relative"
-                    } as any)}
+                    initial={{ opacity: 0, x: -20, scale: 0.8 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    className="mb-4 bg-white text-black px-4 py-2 rounded-tr-2xl rounded-tl-2xl rounded-br-2xl text-sm font-bold shadow-[0_0_20px_rgba(189,0,255,0.3)] relative"
                 >
                     Interested in my skills? Chat with my AI! 🤖
                     <div className="absolute -bottom-2 left-4 w-4 h-4 bg-white rotate-45" />
@@ -189,16 +213,14 @@ const AdityaAI: React.FC = () => {
 
         <motion.button
             onClick={() => { setIsOpen(!isOpen); setShowGreeting(false); }}
-            {...({
-                whileHover: { scale: 1.1 },
-                whileTap: { scale: 0.9 },
-                className: `
-                    p-4 rounded-full border shadow-2xl backdrop-blur-md transition-all duration-300
-                    ${isOpen 
-                        ? 'bg-neon-purple/20 border-neon-purple text-neon-purple shadow-[0_0_30px_rgba(189,0,255,0.4)]' 
-                        : 'bg-black/80 border-white/20 text-white hover:border-neon-purple hover:text-neon-purple'}
-                `
-            } as any)}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className={`
+                p-4 rounded-full border shadow-2xl backdrop-blur-md transition-all duration-300
+                ${isOpen 
+                    ? 'bg-[#bd00ff]/20 border-[#bd00ff] text-[#bd00ff] shadow-[0_0_30px_rgba(189,0,255,0.4)]' 
+                    : 'bg-black/80 border-white/20 text-white hover:border-[#bd00ff] hover:text-[#bd00ff]'}
+            `}
         >
             {isOpen ? <X size={24} /> : <Bot size={24} />}
         </motion.button>
@@ -208,76 +230,94 @@ const AdityaAI: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
             <motion.div
-                {...({
-                    initial: { opacity: 0, y: 50, scale: 0.9 },
-                    animate: { opacity: 1, y: 0, scale: 1 },
-                    exit: { opacity: 0, y: 50, scale: 0.9 },
-                    className: "fixed bottom-24 left-6 z-50 w-[90vw] md:w-[400px] h-[500px] bg-black/90 border border-neon-purple/30 rounded-2xl shadow-[0_0_50px_rgba(189,0,255,0.15)] flex flex-col overflow-hidden backdrop-blur-xl"
-                } as any)}
+                initial={{ opacity: 0, y: 50, scale: 0.9, transformOrigin: "bottom left" }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 50, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                className="fixed bottom-24 left-6 z-[9999] w-[90vw] md:w-[400px] h-[500px] bg-black/90 border border-[#bd00ff]/30 rounded-2xl shadow-[0_0_50px_rgba(189,0,255,0.15)] flex flex-col overflow-hidden backdrop-blur-xl font-sans"
             >
                 {/* Header */}
-                <div className="flex items-center justify-between px-4 py-3 bg-neon-purple/10 border-b border-neon-purple/20">
+                <div className="flex items-center justify-between px-4 py-3 bg-[#bd00ff]/10 border-b border-[#bd00ff]/20">
                     <div className="flex items-center gap-2">
                         <div className="relative">
-                            <Bot size={20} className="text-neon-purple" />
-                            <div className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                            <Bot size={20} className="text-[#bd00ff]" />
+                            <div className="absolute top-0 right-0 w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#00ff00]" />
                         </div>
                         <div>
-                            <h3 className="text-sm font-bold text-white">AadityaAI <span className="text-[10px] text-neon-purple font-mono border border-neon-purple/30 px-1 rounded ml-1">BETA</span></h3>
-                            <p className="text-[10px] text-gray-400">Powered by Gemini 2.5</p>
+                            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+                                AadityaAI 
+                                <span className="text-[10px] text-[#bd00ff] font-mono border border-[#bd00ff]/30 px-1 rounded">V2.0</span>
+                            </h3>
+                            <p className="text-[10px] text-gray-400">System Online • Gemini 1.5</p>
                         </div>
                     </div>
-                    <Sparkles size={16} className="text-neon-purple animate-pulse" />
+                    <Sparkles size={16} className="text-[#bd00ff] animate-pulse" />
                 </div>
 
                 {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-neon-purple/20 scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-[#bd00ff]/20 scrollbar-track-transparent">
                     {messages.map((msg, i) => (
-                        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <motion.div 
+                            key={i} 
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            transition={{ duration: 0.3 }}
+                            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                        >
                             <div 
                                 className={`
-                                    max-w-[80%] p-3 rounded-2xl text-sm font-mono leading-relaxed
+                                    max-w-[85%] p-3 rounded-2xl text-sm font-mono leading-relaxed whitespace-pre-wrap
                                     ${msg.role === 'user' 
-                                        ? 'bg-neon-purple/20 border border-neon-purple/30 text-white rounded-br-none' 
-                                        : 'bg-white/5 border border-white/10 text-gray-300 rounded-bl-none'}
+                                        ? 'bg-[#bd00ff]/20 border border-[#bd00ff]/30 text-white rounded-br-none shadow-[0_0_15px_rgba(189,0,255,0.1)]' 
+                                        : msg.isError 
+                                            ? 'bg-red-500/10 border border-red-500/30 text-red-200 rounded-bl-none'
+                                            : 'bg-white/5 border border-white/10 text-gray-300 rounded-bl-none'}
                                 `}
                             >
+                                {msg.isError && <AlertTriangle size={14} className="inline mr-2 mb-1" />}
                                 {msg.text}
                             </div>
-                        </div>
+                        </motion.div>
                     ))}
+                    
                     {isLoading && (
-                        <div className="flex justify-start">
-                            <div className="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-bl-none flex items-center gap-2 text-xs text-neon-purple">
+                        <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }}
+                            className="flex justify-start"
+                        >
+                            <div className="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-bl-none flex items-center gap-2 text-xs text-[#bd00ff]">
                                 <Loader2 size={14} className="animate-spin" />
-                                <span>Thinking...</span>
+                                <span className="animate-pulse">Accessing Neural Database...</span>
                             </div>
-                        </div>
+                        </motion.div>
                     )}
                     <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input Area */}
-                <div className="p-4 bg-black/50 border-t border-white/10">
+                <div className="p-4 bg-black/50 border-t border-white/10 backdrop-blur-lg">
                     <div className="relative flex items-center">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
                             onKeyDown={handleKeyDown}
+                            disabled={isLoading}
                             placeholder="Ask about my projects..."
-                            className="w-full bg-white/5 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:border-neon-purple focus:outline-none focus:bg-white/10 transition-all font-mono"
+                            className="w-full bg-white/5 border border-white/10 rounded-full pl-4 pr-12 py-3 text-sm text-white focus:border-[#bd00ff] focus:outline-none focus:bg-white/10 transition-all font-mono placeholder:text-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                         <button 
                             onClick={handleSend}
                             disabled={isLoading || !input.trim()}
-                            className="absolute right-2 p-2 bg-neon-purple/20 rounded-full text-neon-purple hover:bg-neon-purple hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="absolute right-2 p-2 bg-[#bd00ff]/20 rounded-full text-[#bd00ff] hover:bg-[#bd00ff] hover:text-white transition-all disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-[#bd00ff]/20 disabled:hover:text-[#bd00ff]"
                         >
                             <Send size={16} />
                         </button>
                     </div>
-                    <div className="text-center mt-2">
-                        <p className="text-[9px] text-gray-600 uppercase tracking-widest">Context Window: Active</p>
+                    <div className="text-center mt-2 flex justify-center items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
+                        <p className="text-[9px] text-gray-500 uppercase tracking-widest">Context Window: Active</p>
                     </div>
                 </div>
 

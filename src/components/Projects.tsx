@@ -1,7 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ArrowRight, Github, ExternalLink, Terminal, Brain, Zap, Database, Cpu, Layers } from 'lucide-react';
-import { Project } from '../types';
+import { X, ArrowRight, Github, ExternalLink, Terminal, Brain, Zap } from 'lucide-react';
+
+// ==============================================================================
+// TYPES
+// ==============================================================================
+
+export interface Project {
+  id: string;
+  title: string;
+  tagline: string;
+  tech: string[];
+  problem: string;
+  solution: string;
+  impact: string;
+  image: string;
+  github?: string;
+  demo?: string;
+}
+
+// ==============================================================================
+// DATA
+// ==============================================================================
 
 const projects: Project[] = [
   {
@@ -72,11 +92,25 @@ const projects: Project[] = [
   }
 ];
 
+// ==============================================================================
+// COMPONENT
+// ==============================================================================
+
 const Projects: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
   
   const selectedProject = projects.find(p => p.id === selectedId);
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    if (selectedId) {
+        document.body.style.overflow = 'hidden';
+    } else {
+        document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [selectedId]);
 
   const handleImageLoad = (id: string) => {
     setLoadedImages(prev => {
@@ -87,18 +121,16 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen py-24 px-4 md:px-12 flex flex-col justify-center">
+    <section className="relative min-h-screen py-24 px-4 md:px-12 flex flex-col justify-center bg-[#0a0a0a]">
       
       <motion.div 
-        {...({
-            initial: { opacity: 0, x: -50 },
-            whileInView: { opacity: 1, x: 0 },
-            viewport: { once: true },
-            className: "mb-16 border-l-4 border-neon-cyan pl-6"
-        } as any)}
+        initial={{ opacity: 0, x: -50 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        className="mb-16 border-l-4 border-[#00f0ff] pl-6"
       >
         <h2 className="text-4xl md:text-5xl font-black mb-2 tracking-tighter text-white uppercase">
-            Deployment <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple">Protocols</span>
+            Deployment <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#bd00ff]">Protocols</span>
         </h2>
         <p className="text-gray-400 font-mono tracking-widest text-sm uppercase">Tactical Architectures & Systems</p>
       </motion.div>
@@ -109,25 +141,23 @@ const Projects: React.FC = () => {
           return (
             <motion.div
                 key={project.id}
-                {...({
-                    layoutId: `card-${project.id}`,
-                    onClick: () => setSelectedId(project.id),
-                    initial: { opacity: 0, y: 50 },
-                    whileInView: { opacity: 1, y: 0 },
-                    viewport: { once: true },
-                    transition: { duration: 0.5, delay: index * 0.1 },
-                    className: "group relative cursor-pointer"
-                } as any)}
+                layoutId={`card-${project.id}`}
+                onClick={() => setSelectedId(project.id)}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className="group relative cursor-pointer"
             >
                 {/* Card Content */}
-                <div className="h-[400px] w-full rounded-xl bg-glass border border-white/5 overflow-hidden transition-all duration-500 group-hover:border-neon-cyan/50 group-hover:shadow-[0_0_30px_rgba(0,240,255,0.1)] backdrop-blur-sm flex flex-col">
+                <div className="h-[400px] w-full rounded-xl bg-white/5 border border-white/5 overflow-hidden transition-all duration-500 group-hover:border-[#00f0ff]/50 group-hover:shadow-[0_0_30px_rgba(0,240,255,0.1)] backdrop-blur-sm flex flex-col">
                     
                 {/* Image Placeholder with Overlay */}
                 <div className="h-[45%] w-full bg-gray-900 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-void to-transparent z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] to-transparent z-10" />
                     {/* Tech Status Dots */}
                     <div className="absolute top-3 right-3 z-20 flex gap-1">
-                        <div className="w-1.5 h-1.5 rounded-full bg-neon-cyan animate-pulse shadow-[0_0_5px_rgba(0,240,255,1)]" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#00f0ff] animate-pulse shadow-[0_0_5px_rgba(0,240,255,1)]" />
                         <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
                         <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
                     </div>
@@ -143,6 +173,11 @@ const Projects: React.FC = () => {
                         src={project.image} 
                         alt={project.title}
                         onLoad={() => handleImageLoad(project.id)}
+                        onError={(e) => {
+                             // Fallback if image fails
+                             (e.target as HTMLImageElement).style.display = 'none';
+                             setLoadedImages(prev => new Set(prev).add(project.id));
+                        }}
                         className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 grayscale group-hover:grayscale-0 ${isLoaded ? 'opacity-60 group-hover:opacity-100' : 'opacity-0'}`}
                     />
                 </div>
@@ -156,13 +191,13 @@ const Projects: React.FC = () => {
                             </span>
                         ))}
                         </div>
-                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-neon-cyan transition-colors leading-tight">{project.title}</h3>
+                        <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00f0ff] transition-colors leading-tight">{project.title}</h3>
                         <p className="text-gray-400 text-xs font-mono line-clamp-3">{project.tagline}</p>
                     </div>
                     
                     <div className="mt-4 pt-4 border-t border-white/5 flex items-center justify-between">
                         <span className="text-[10px] text-gray-500 font-mono uppercase">System Ready</span>
-                        <div className="flex items-center gap-2 text-neon-cyan text-xs font-mono opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                        <div className="flex items-center gap-2 text-[#00f0ff] text-xs font-mono opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
                             Initialize <ArrowRight size={12} />
                         </div>
                     </div>
@@ -178,35 +213,32 @@ const Projects: React.FC = () => {
         {selectedProject && (
           <>
             <motion.div
-              {...({
-                  initial: { opacity: 0 },
-                  animate: { opacity: 1 },
-                  exit: { opacity: 0 },
-                  onClick: () => setSelectedId(null),
-                  className: "fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
-              } as any)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setSelectedId(null)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
             />
             <motion.div
-              {...({
-                  layoutId: `card-${selectedProject.id}`,
-                  initial: { x: '100%' },
-                  animate: { x: 0 },
-                  exit: { x: '100%' },
-                  transition: { type: 'spring', damping: 30, stiffness: 300 },
-                  className: "fixed top-0 right-0 h-full w-full md:w-[600px] bg-void border-l border-white/10 z-50 overflow-y-auto shadow-2xl"
-              } as any)}
+              layoutId={`card-${selectedProject.id}`}
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+              className="fixed top-0 right-0 h-full w-full md:w-[600px] bg-[#0a0a0a] border-l border-white/10 z-50 overflow-y-auto shadow-2xl"
             >
               <div className="p-8 md:p-12 relative min-h-screen flex flex-col">
                 <button 
                   onClick={() => setSelectedId(null)}
                   className="absolute top-6 right-6 p-2 rounded-full hover:bg-white/10 transition-colors text-white z-50"
+                  aria-label="Close Project Details"
                 >
                   <X size={24} />
                 </button>
 
                 <div className="mb-8">
                     <h2 className="text-3xl font-black mb-2 text-white uppercase tracking-tight">{selectedProject.title}</h2>
-                    <p className="text-neon-pink font-mono text-sm">{selectedProject.tagline}</p>
+                    <p className="text-[#ff0099] font-mono text-sm">{selectedProject.tagline}</p>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-10">
@@ -219,19 +251,19 @@ const Projects: React.FC = () => {
 
                 <div className="space-y-12 flex-1">
                   <div className="relative pl-6 border-l border-red-500/50">
-                    <div className="absolute -left-3 top-0 bg-void p-1 text-red-500"><Zap size={20} /></div>
+                    <div className="absolute -left-3 top-0 bg-[#0a0a0a] p-1 text-red-500"><Zap size={20} /></div>
                     <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Target Inefficiency</h3>
                     <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.problem}</p>
                   </div>
 
-                  <div className="relative pl-6 border-l border-neon-cyan/50">
-                    <div className="absolute -left-3 top-0 bg-void p-1 text-neon-cyan"><Brain size={20} /></div>
+                  <div className="relative pl-6 border-l border-[#00f0ff]/50">
+                    <div className="absolute -left-3 top-0 bg-[#0a0a0a] p-1 text-[#00f0ff]"><Brain size={20} /></div>
                     <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Tactical Solution</h3>
                     <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.solution}</p>
                   </div>
 
                   <div className="relative pl-6 border-l border-green-500/50">
-                     <div className="absolute -left-3 top-0 bg-void p-1 text-green-500"><Terminal size={20} /></div>
+                     <div className="absolute -left-3 top-0 bg-[#0a0a0a] p-1 text-green-500"><Terminal size={20} /></div>
                     <h3 className="text-lg font-bold text-gray-200 mb-2 uppercase tracking-wide text-xs">Operational Impact</h3>
                     <p className="text-gray-400 leading-relaxed font-mono text-sm">{selectedProject.impact}</p>
                   </div>
@@ -243,9 +275,9 @@ const Projects: React.FC = () => {
                       href={selectedProject.github}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 px-6 py-4 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-neon-cyan transition-all text-sm font-mono uppercase tracking-wider group"
+                      className="flex items-center justify-center gap-2 px-6 py-4 bg-white/5 border border-white/10 rounded hover:bg-white/10 hover:border-[#00f0ff] transition-all text-sm font-mono uppercase tracking-wider group"
                     >
-                      <Github size={18} className="group-hover:text-neon-cyan transition-colors" /> 
+                      <Github size={18} className="group-hover:text-[#00f0ff] transition-colors" /> 
                       Access Source Code
                     </a>
                   )}
@@ -254,7 +286,7 @@ const Projects: React.FC = () => {
                       href={selectedProject.demo}
                       target="_blank"
                       rel="noreferrer"
-                      className="flex items-center justify-center gap-2 px-6 py-4 bg-neon-cyan/10 border border-neon-cyan/20 rounded hover:bg-neon-cyan/20 text-neon-cyan transition-all text-sm font-mono uppercase tracking-wider"
+                      className="flex items-center justify-center gap-2 px-6 py-4 bg-[#00f0ff]/10 border border-[#00f0ff]/20 rounded hover:bg-[#00f0ff]/20 text-[#00f0ff] transition-all text-sm font-mono uppercase tracking-wider"
                     >
                       <ExternalLink size={18} /> Initialize Demo
                     </a>

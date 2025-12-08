@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Cloud, Terminal, Cpu, Brain, X, GraduationCap, ChevronRight, Code2, BookOpen } from 'lucide-react';
+import { Cloud, Terminal, Cpu, Brain, X, GraduationCap, ChevronRight } from 'lucide-react';
+
+// ==============================================================================
+// TYPES & DATA INTERFACES
+// ==============================================================================
 
 interface ExperienceItem {
   id: string;
@@ -9,14 +13,18 @@ interface ExperienceItem {
   timeframe: string;
   description: string;
   icon: React.ElementType;
-  color: string; // Tailwind text color
-  borderColor: string; // Tailwind border color
-  shadowColor: string; // Hex for box-shadow
-  orbitSize: number; // Pixel width of the orbit ring
-  speed: number; // Seconds per rotation
+  color: string;        // Tailwind text color class
+  borderColor: string;  // Tailwind border color class
+  shadowColor: string;  // Hex code for box-shadow generation
+  orbitSize: number;    // Width/Height in pixels
+  speed: number;        // Seconds for one full rotation
 }
 
-// RGPV Data (The Sun)
+// ==============================================================================
+// DATA SOURCE
+// ==============================================================================
+
+// The Sun (Center Node)
 const RGPV_DATA: ExperienceItem = {
     id: 'rgpv',
     title: 'University',
@@ -27,10 +35,11 @@ const RGPV_DATA: ExperienceItem = {
     color: 'text-white',
     borderColor: 'border-white',
     shadowColor: '#ffffff',
-    orbitSize: 0, // Center
+    orbitSize: 0,
     speed: 0
 };
 
+// Orbiting Planets
 const PLANETS: ExperienceItem[] = [
   {
     id: 'automation',
@@ -39,8 +48,8 @@ const PLANETS: ExperienceItem[] = [
     timeframe: 'Present',
     description: 'Architecting autonomous agents and self-healing operational loops. Bridging the gap between static scripts and intelligent, decision-making workflows using LangChain and n8n.',
     icon: Terminal,
-    color: 'text-neon-cyan',
-    borderColor: 'border-neon-cyan',
+    color: 'text-[#00f0ff]', // Fixed hex for consistency if tailwind config missing
+    borderColor: 'border-[#00f0ff]',
     shadowColor: '#00f0ff',
     orbitSize: 300,
     speed: 20
@@ -65,8 +74,8 @@ const PLANETS: ExperienceItem[] = [
     timeframe: 'July 2025',
     description: 'Developed predictive models for HR Analytics using Python/Scikit-Learn. Focused on advanced feature engineering, data preprocessing pipelines, and model optimization.',
     icon: Brain,
-    color: 'text-neon-purple',
-    borderColor: 'border-neon-purple',
+    color: 'text-[#bd00ff]',
+    borderColor: 'border-[#bd00ff]',
     shadowColor: '#bd00ff',
     orbitSize: 600,
     speed: 40
@@ -89,12 +98,12 @@ const PLANETS: ExperienceItem[] = [
 const Experience: React.FC = () => {
   const [activeId, setActiveId] = useState<string | null>(null);
   
-  // Combine RGPV and Planets for lookup
+  // Logic to determine which data to show in the modal
   const activeItem = activeId === 'rgpv' ? RGPV_DATA : PLANETS.find(p => p.id === activeId);
   const isPaused = activeId !== null;
 
   return (
-    <section className="relative w-full h-[100dvh] bg-void overflow-hidden flex flex-col items-center justify-center border-t border-b border-white/5 snap-center">
+    <section className="relative w-full h-[100dvh] bg-[#0a0a0a] overflow-hidden flex flex-col items-center justify-center border-t border-b border-white/5 snap-center">
       
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_70%)] pointer-events-none" />
@@ -102,7 +111,7 @@ const Experience: React.FC = () => {
       {/* Header */}
       <div className="absolute top-8 md:top-12 left-0 w-full text-center z-10 pointer-events-none px-4">
          <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-2">
-            Evolution <span className="text-transparent bg-clip-text bg-gradient-to-r from-neon-cyan to-neon-purple">Protocol</span>
+            Evolution <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00f0ff] to-[#bd00ff]">Protocol</span>
          </h2>
          <p className="text-gray-500 font-mono text-[10px] md:text-xs uppercase tracking-[0.3em]">
             Interactive Cyber-Solar System • Click nodes to Decrypt
@@ -110,17 +119,18 @@ const Experience: React.FC = () => {
       </div>
 
       {/* SOLAR SYSTEM CONTAINER */}
-      {/* Scaled down for mobile, full size for desktop */}
-      <div className="relative flex items-center justify-center transform scale-[0.45] md:scale-[0.65] lg:scale-[0.8] xl:scale-90 transition-transform duration-500">
+      {/* Scaled down for mobile, full size for desktop to ensure visibility */}
+      <div className="relative flex items-center justify-center transform scale-[0.4] md:scale-[0.65] lg:scale-[0.8] xl:scale-90 transition-transform duration-500">
         
         {/* --- CENTER SUN: RGPV (Clickable) --- */}
         <button
             onClick={() => setActiveId('rgpv')}
             className={`
-                absolute z-20 w-40 h-40 rounded-full bg-void border-4 border-white/10 
+                absolute z-20 w-40 h-40 rounded-full bg-[#0a0a0a] border-4 border-white/10 
                 flex flex-col items-center justify-center shadow-[0_0_80px_rgba(255,255,255,0.15)] 
-                relative group cursor-pointer transition-transform duration-300 hover:scale-105
+                relative group cursor-pointer transition-transform duration-300 hover:scale-105 hover:border-white/30
             `}
+            aria-label="View RGPV University Details"
         >
             {/* Pulsing Rings */}
             <div className="absolute inset-0 rounded-full border border-white/20 animate-[ping_3s_cubic-bezier(0,0,0.2,1)_infinite] opacity-30 pointer-events-none" />
@@ -141,7 +151,7 @@ const Experience: React.FC = () => {
         {PLANETS.map((planet) => (
             <React.Fragment key={planet.id}>
                 
-                {/* 1. Visible Orbital Path (Ring) - Pointer Events None to allow clicking through */}
+                {/* 1. Visible Orbital Path (Ring) */}
                 <div 
                     className="absolute rounded-full border border-white/10 pointer-events-none"
                     style={{
@@ -153,7 +163,7 @@ const Experience: React.FC = () => {
                 />
 
                 {/* 2. Rotating Wrapper (The Orbit Animation) */}
-                {/* CRITICAL: pointer-events-none ensures this large div doesn't block clicks on inner planets */}
+                {/* pointer-events-none ensures the invisible rotating box doesn't block clicks on other elements */}
                 <div 
                     className="absolute rounded-full flex items-start justify-center pointer-events-none"
                     style={{
@@ -165,7 +175,7 @@ const Experience: React.FC = () => {
                     }}
                 >
                     {/* 3. The Planet Node (Counter-Rotating) */}
-                    {/* CRITICAL: pointer-events-auto re-enables clicking on the button itself */}
+                    {/* pointer-events-auto re-enables clicking on the button itself */}
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -173,7 +183,7 @@ const Experience: React.FC = () => {
                         }}
                         className={`
                             pointer-events-auto
-                            relative -mt-[30px] w-[60px] h-[60px] md:w-[70px] md:h-[70px] rounded-full bg-void 
+                            relative -mt-[30px] w-[60px] h-[60px] md:w-[70px] md:h-[70px] rounded-full bg-[#0a0a0a] 
                             border-2 ${planet.borderColor} flex items-center justify-center 
                             transition-all duration-300 group cursor-pointer
                             hover:scale-125 hover:shadow-[0_0_40px_${planet.shadowColor}]
@@ -184,9 +194,10 @@ const Experience: React.FC = () => {
                             animation: `counter-orbit ${planet.speed}s linear infinite`,
                             animationPlayState: isPaused ? 'paused' : 'running',
                         }}
+                        aria-label={`View ${planet.title} Experience`}
                     >
                         {/* Glow effect inside planet */}
-                        <div className={`absolute inset-0 rounded-full opacity-20 group-hover:opacity-40 transition-opacity bg-${planet.borderColor.replace('border-', '')}`} />
+                        <div className={`absolute inset-0 rounded-full opacity-20 group-hover:opacity-40 transition-opacity ${planet.color.replace('text-', 'bg-')}`} />
                         
                         <planet.icon size={28} className={`${planet.color} relative z-10`} />
 
@@ -210,27 +221,23 @@ const Experience: React.FC = () => {
       <AnimatePresence>
         {activeItem && (
             <motion.div
-                {...({
-                    initial: { opacity: 0 },
-                    animate: { opacity: 1 },
-                    exit: { opacity: 0 },
-                    className: "absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4",
-                    onClick: () => setActiveId(null)
-                } as any)}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                onClick={() => setActiveId(null)}
             >
                 <motion.div
-                    {...({
-                        initial: { scale: 0.9, y: 50, opacity: 0 },
-                        animate: { scale: 1, y: 0, opacity: 1 },
-                        exit: { scale: 0.9, y: 50, opacity: 0 },
-                        transition: { type: "spring", damping: 25, stiffness: 300 },
-                        onClick: (e: React.MouseEvent) => e.stopPropagation(),
-                        className: `
-                            w-full max-w-lg bg-[#0a0a0a] border ${activeItem.borderColor} 
-                            rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden
-                        `,
-                        style: { boxShadow: `0 0 100px -20px ${activeItem.shadowColor}80` }
-                    } as any)}
+                    initial={{ scale: 0.9, y: 50, opacity: 0 }}
+                    animate={{ scale: 1, y: 0, opacity: 1 }}
+                    exit={{ scale: 0.9, y: 50, opacity: 0 }}
+                    transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className={`
+                        w-full max-w-lg bg-[#0a0a0a] border ${activeItem.borderColor} 
+                        rounded-2xl p-8 md:p-10 shadow-2xl relative overflow-hidden
+                    `}
+                    style={{ boxShadow: `0 0 100px -20px ${activeItem.shadowColor}80` }}
                 >
                     {/* Animated Modal Background */}
                     <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.03)_50%,transparent_75%,transparent_100%)] bg-[length:250%_250%] animate-[shimmer_6s_linear_infinite] pointer-events-none" />

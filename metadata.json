@@ -1,5 +1,8 @@
 {
   "name": "Aaditya Thakur - AI Automation Engineer",
-  "description": "Neon-Black CyberZen portfolio for Aaditya Thakur, featuring high-performance animations, radial experience maps, and recruiter-optimized case studies.",
+  "description": "Neon-Black CyberZen portfolio featuring OS-Level AI Agents, high-performance GSAP animations, radial experience maps, and recruiter-optimized case studies.",
+  "version": "2.0.0",
+  "stack": ["React", "TypeScript", "TailwindCSS", "Framer Motion", "GSAP"],
+  "keywords": ["AI Automation", "RAG Systems", "Agentic Workflows", "Portfolio"],
   "requestFramePermissions": []
 }
