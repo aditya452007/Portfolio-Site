@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { 
   Lock, 
@@ -12,9 +12,22 @@ import {
   Server, 
   CheckCircle, 
   Scan, 
-  ArrowRight,
   Zap
 } from 'lucide-react';
+
+// --- TYPE DEFINITIONS ---
+interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    label: string;
+    isValid?: boolean;
+    isActive?: boolean;
+}
+
+interface SocialButtonProps {
+    href: string;
+    icon: React.ReactNode;
+    label: string;
+    highlight?: boolean;
+}
 
 const ContactVault: React.FC = () => {
   // --- STATE MANAGEMENT ---
@@ -25,7 +38,7 @@ const ContactVault: React.FC = () => {
 
   // Form State
   const [formStatus, setFormStatus] = useState<'IDLE' | 'PROCESSING' | 'SENT'>('IDLE');
-  const [focusedField, setFocusedField] = useState<number>(0);
+  const [focusedField, setFocusedField] = useState<number>(-1); // -1 means no focus
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   
   // Animation Controls
@@ -259,30 +272,35 @@ const ContactVault: React.FC = () => {
                                 <InputGroup 
                                     label="Identifier (Name)" 
                                     value={formData.name}
-                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                    isActive={focusedField === 0}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, name: e.target.value})}
                                     onFocus={() => { setFocusedField(0); playSound('servo'); }}
+                                    onBlur={() => setFocusedField(-1)}
                                     placeholder="Cyber_User_01"
                                     disabled={formStatus === 'PROCESSING'}
                                 />
                                 <InputGroup 
                                     label="CommLink (Email)" 
                                     value={formData.email}
-                                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                    isActive={focusedField === 1}
+                                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, email: e.target.value})}
                                     onFocus={() => { setFocusedField(1); playSound('servo'); }}
+                                    onBlur={() => setFocusedField(-1)}
                                     placeholder="user@net.com"
                                     type="email"
                                     isValid={isValidEmail}
                                     disabled={formStatus === 'PROCESSING'}
                                 />
-                                <div className="col-span-1 md:col-span-2 space-y-2 group">
+                                <div className={`col-span-1 md:col-span-2 space-y-2 group transition-opacity ${focusedField !== -1 && focusedField !== 2 ? 'opacity-50' : 'opacity-100'}`}>
                                     <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest group-focus-within:text-[#00f0ff] transition-colors">
                                         Payload (Message)
                                     </label>
                                     <textarea 
                                         rows={4}
                                         value={formData.message}
-                                        onChange={(e) => setFormData({...formData, message: e.target.value})}
+                                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setFormData({...formData, message: e.target.value})}
                                         onFocus={() => { setFocusedField(2); playSound('servo'); }}
+                                        onBlur={() => setFocusedField(-1)}
                                         disabled={formStatus === 'PROCESSING'}
                                         className="w-full bg-black/40 border border-white/10 rounded-lg p-3 text-white focus:border-[#00f0ff] focus:outline-none focus:bg-[#00f0ff]/5 focus:shadow-[0_0_20px_rgba(0,240,255,0.1)] transition-all font-mono text-sm resize-none"
                                         placeholder="Initiate collaboration protocols..."
@@ -376,8 +394,8 @@ const ContactVault: React.FC = () => {
 
 // --- SUB COMPONENTS FOR CLEANER CODE ---
 
-const InputGroup = ({ label, type = "text", isValid, ...props }: any) => (
-    <div className="space-y-2 group">
+const InputGroup: React.FC<InputGroupProps> = ({ label, type = "text", isValid, isActive, ...props }) => (
+    <div className={`space-y-2 group transition-opacity ${!isActive && props.disabled === false && isActive !== undefined ? 'opacity-50 hover:opacity-100' : 'opacity-100'}`}>
         <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest group-focus-within:text-[#00f0ff] transition-colors flex justify-between">
             <span>{label}</span>
             {isValid && <CheckCircle size={12} className="text-green-500 shadow-[0_0_10px_rgba(0,255,0,0.5)]" />}
@@ -390,7 +408,7 @@ const InputGroup = ({ label, type = "text", isValid, ...props }: any) => (
     </div>
 );
 
-const SocialButton = ({ href, icon, label, highlight }: any) => (
+const SocialButton: React.FC<SocialButtonProps> = ({ href, icon, label, highlight }) => (
     <a 
         href={href} 
         target="_blank" 
