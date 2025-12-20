@@ -4,6 +4,7 @@ import { MapPin } from 'lucide-react';
 
 // Component Imports
 import Hero from './components/Hero';
+import ImpactEngine from './components/ImpactEngine'; // <--- NEW IMPORT
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import TheLab from './components/TheLab';
@@ -70,14 +71,18 @@ const App: React.FC = () => {
             <Hero />
         </section>
 
-        {/* PROJECTS */}
-        <section className="min-h-screen w-full py-20">
-            <Projects />
-        </section>
+        {/* --- NEW SECTION: The Impact Engine --- */}
+        {/* Placed immediately after Hero as requested */}
+        <ImpactEngine />
 
         {/* MAN VS MACHINE (Automation Demo) */}
         <section className="min-h-screen w-full py-20 overflow-hidden">
             <ManVsMachine />
+        </section>
+
+        {/* PROJECTS */}
+        <section className="min-h-screen w-full py-20">
+            <Projects />
         </section>
 
         {/* EXPERIENCE (Solar System) */}

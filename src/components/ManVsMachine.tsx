@@ -71,13 +71,14 @@ const PipelineView: React.FC<{ onBack: () => void }> = ({ onBack }) => {
             });
 
             // --- 2. INPUT INGESTION ---
+            // CHANGED: Increased duration and stagger significantly as requested
             tl.to(inputRefs.current, {
                 x: isMobile ? 0 : 60,
                 y: isMobile ? 60 : 0,
                 scale: 0,
                 opacity: 0,
-                duration: 0.8,
-                stagger: 0.1,
+                duration: 2.5, // Increased from 0.8
+                stagger: 0.5,  // Increased from 0.1
                 ease: "back.in(1.7)"
             });
 
