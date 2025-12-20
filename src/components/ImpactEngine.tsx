@@ -185,7 +185,7 @@ const DecoderText = () => {
     let iteration = 0;
     const interval = setInterval(() => {
       setText(prev => 
-        prev.split("").map((letter, index) => {
+        prev.split("").map((index) => {
           if (index < iteration) return target[index];
           return characters[Math.floor(Math.random() * characters.length)];
         }).join("")
